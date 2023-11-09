@@ -8,7 +8,6 @@ import dalle
 import s3
 import send_email
 
-load_dotenv()
 # This is an app that will randomly select a style and a scene from files, construct a prompt, and then call DALL-E image generation.
 # The image will then be saved to an S3 bucket and emailed to the user.
 def bear_of_the_day():
@@ -51,4 +50,5 @@ def download_image(url, file_path):
         f.write(response.content)
 
 if __name__ == "__main__":
+    load_dotenv()
     bear_of_the_day()

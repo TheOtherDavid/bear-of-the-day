@@ -1,10 +1,7 @@
 import datetime
-from dotenv import load_dotenv
 import os
 import smtplib
 from email.message import EmailMessage
-
-load_dotenv()
 
 def send_image_email(recipients, image_path):
   sender_email = os.environ['SENDER_EMAIL']
