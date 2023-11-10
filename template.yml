@@ -33,25 +33,11 @@ BearOfTheDayFunctionRole:
           Statement:
             - Effect: Allow
               Action:
-                - "s3:PutObject"
-                - "cloudformation:CreateChangeSet"
-                - "cloudformation:DescribeChangeSet"
-                - "cloudformation:ExecuteChangeSet"
-                - "cloudformation:DescribeStacks"
-                - "cloudformation:DescribeStackEvents"
-                - "cloudformation:GetTemplateSummary"
-                - "iam:CreateRole"
-                - "iam:AttachRolePolicy"
-                - "iam:GetRole"
-                - "iam:DetachRolePolicy"
-                - "iam:PassRole"
-                - "lambda:CreateFunction"
-                - "lambda:GetFunction"
-                - "lambda:UpdateFunctionCode"
-                - "lambda:DeleteFunction"
-                - "events:DescribeRule"
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
               Resource: '*'
             - Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: 'arn:aws:s3:::your-bucket-name/*'
+              Resource: 'arn:aws:s3:::bear-of-the-day/*'
