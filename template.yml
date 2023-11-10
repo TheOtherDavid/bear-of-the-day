@@ -1,43 +1,22 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: An AWS Serverless Application.
-
+Description: An AWS Serverless Specification template describing your function.
 Resources:
   BearOfTheDayFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: bear-of-the-day.bear_of_the_day
+      Handler: bear_of_the_day.lambda_handler
       Runtime: python3.8
+      CodeUri: .
+      Description: Sends an email with a bear picture of the day.
+      MemorySize: 128
+      Timeout: 10
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - S3ReadPolicy:
+            BucketName: 'bear-of-the-day'
       Events:
         BearOfTheDay:
           Type: Schedule
           Properties:
             Schedule: cron(0 8 * * ? *)
-  BearOfTheDayFunctionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName: BearOfTheDayFunctionPolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: '*'
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                Resource: 'arn:aws:s3:::bear-of-the-day/*'
