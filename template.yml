@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application.
+
+Resources:
+  BearOfTheDayFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: bear-of-the-day.bear_of_the_day
+      Runtime: python3.8
+      Events:
+        BearOfTheDay:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 8 * * ? *)
