@@ -26,5 +26,3 @@ def send_image_email(recipients, image_path):
     
     smtp.login(sender_email, sender_pass)
     smtp.send_message(msg)
-    
-  print("Email sent!")
