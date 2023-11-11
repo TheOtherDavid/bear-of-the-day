@@ -38,7 +38,7 @@ jobs:
       run: sam package --output-template-file packaged.yaml --s3-bucket bear-of-the-day
 
     - name: Deploy Lambda function
-      run: sam deploy --template-file packaged.yaml --region us-east-2 --capabilities CAPABILITY_IAM --stack-name BEAR-OF-THE-DAY
+      run: sam deploy --template-file packaged.yaml --region us-east-2 --capabilities CAPABILITY_IAM --stack-name BEAR-OF-THE-DAY --parameter-overrides 'OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} RECIPIENTS=${{ secrets.RECIPIENTS }} SENDER_EMAIL=${{ secrets.SENDER_EMAIL }} SENDER_PASS=${{ secrets.SENDER_PASS }}'
 
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
