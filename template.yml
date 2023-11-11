@@ -11,6 +11,12 @@ Resources:
       Description: Sends an email with a bear picture of the day.
       MemorySize: 128
       Timeout: 10
+      Environment:
+        Variables:
+          OPENAI_API_KEY: ''
+          RECIPIENTS: ''
+          SENDER_EMAIL: ''
+          SENDER_PASS: ''
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
