@@ -13,10 +13,10 @@ Resources:
       Timeout: 10
       Environment:
         Variables:
-          OPENAI_API_KEY: ''
-          RECIPIENTS: ''
-          SENDER_EMAIL: ''
-          SENDER_PASS: ''
+          OPENAI_API_KEY: !Sub ${OpenAIKey}
+          RECIPIENTS: !Sub ${Recipients}
+          SENDER_EMAIL: !Sub ${SenderEmail}
+          SENDER_PASS: !Sub ${SenderPass}
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
@@ -26,3 +26,13 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: cron(0 8 * * ? *)
+
+Parameters:
+  OpenAIKey:
+    Type: String
+  Recipients:
+    Type: String
+  SenderEmail:
+    Type: String
+  SenderPass:
+    Type: String
