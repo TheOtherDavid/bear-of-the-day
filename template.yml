@@ -17,6 +17,7 @@ Resources:
           RECIPIENTS: !Sub ${Recipients}
           SENDER_EMAIL: !Sub ${SenderEmail}
           SENDER_PASS: !Sub ${SenderPass}
+          FILE_PATH: !Sub ${FilePath}
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
@@ -35,4 +36,6 @@ Parameters:
   SenderEmail:
     Type: String
   SenderPass:
+    Type: String
+  FilePath:
     Type: String
