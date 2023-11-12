@@ -24,6 +24,9 @@ def bear_of_the_day():
     print(prompt)
     # generate the image
     image_url = dalle.generate_image(prompt)
+    if image_url is None:
+        print("Failed to generate image.")
+        return
     print(image_url)
 
     # save the image to a file with the timestamp
