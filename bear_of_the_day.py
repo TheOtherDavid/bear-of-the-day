@@ -26,13 +26,11 @@ def bear_of_the_day():
     image_url = dalle.generate_image(prompt)
     print(image_url)
 
-    save_image = os.environ['SAVE_IMAGE']
-    if save_image == "True":
-        # save the image to a file with the timestamp
-        image_path = 'static/images/' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
-        download_image(image_url, image_path)
-        # save the image to S3
-        # s3.save_image_to_s3(image_url)
+    # save the image to a file with the timestamp
+    image_path = 'static/images/' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
+    download_image(image_url, image_path)
+    # save the image to S3
+    # s3.save_image_to_s3(image_url)
 
     # email the image to the user
     recipients = os.environ['RECIPIENTS'].split(',')
