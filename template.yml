@@ -10,7 +10,7 @@ Resources:
       CodeUri: .
       Description: Sends an email with a bear picture of the day.
       MemorySize: 128
-      Timeout: 10
+      Timeout: 30
       Environment:
         Variables:
           OPENAI_API_KEY: !Sub ${OpenAIKey}
