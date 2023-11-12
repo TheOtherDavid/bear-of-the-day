@@ -162,3 +162,4 @@ cython_debug/
 
 # Bear of the Day-specific files
 static/
+tmp/
