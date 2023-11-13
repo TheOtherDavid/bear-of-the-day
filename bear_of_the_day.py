@@ -38,7 +38,7 @@ def bear_of_the_day():
     # email the image to the user
     recipients = os.environ['RECIPIENTS'].split(',')
     print("Sending email to " + str(recipients) + "...")
-    send_email.send_image_email(recipients, image_path)
+    send_email.send_image_email(recipients, image_path, prompt)
     print("Email sent!")
 
 def load_data_file(filename):
