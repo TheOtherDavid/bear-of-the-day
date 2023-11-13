@@ -1,11 +1,9 @@
-import csv
 import datetime
 from dotenv import load_dotenv
 import os
 import random
 import requests
 import dalle
-import s3
 import send_email
 
 # This is an app that will randomly select a style and a scene from files, construct a prompt, and then call DALL-E image generation.
