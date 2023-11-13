@@ -36,7 +36,7 @@ jobs:
         fi
 
     - name: Package Lambda function
-      run: sam package --output-template-file packaged.yaml --s3-bucket bear-of-the-day --s3-prefix builds
+      run: sam package --output-template-file packaged.yaml --s3-bucket builds-88775522
 
     - name: Deploy Lambda function
       run: sam deploy --template-file packaged.yaml --region us-east-2 --capabilities CAPABILITY_IAM --stack-name BEAR-OF-THE-DAY --parameter-overrides OpenAIKey=${{ secrets.OPENAI_API_KEY }} Recipients=${{ secrets.RECIPIENTS }} SenderEmail=${{ secrets.SENDER_EMAIL }} SenderPass=${{ secrets.SENDER_PASS }} FilePath=${{ secrets.FILE_PATH }}
