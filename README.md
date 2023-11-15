@@ -12,13 +12,15 @@ The program is implemented in Python and uses the following key technologies:
 
 - **AWS Lambda**: The core logic of the program is implemented in a serverless AWS Lambda function. This function is triggered on a schedule, constructs the image prompt, calls the DALL-E 3 API, and sends the email.
 
-- **SMTP via Gmail**: The program uses SMTP via Gmail to send the generated bear image to the chosen recipients. Ensure that you have set up the necessary environment variables (`SENDER_EMAIL` and `SENDER_PASS`) for the Gmail account used to send emails.
+- **SMTP via Gmail**: The program uses SMTP via Gmail to send the generated bear image to the chosen recipients.
 
 ## Setup and Deployment
 
 The program is packaged and deployed using the AWS Serverless Application Model (SAM) CLI. The `sam package` and `sam deploy` commands are used to package the application and deploy it to AWS, respectively.
 
 Please ensure that you have the necessary AWS permissions and that your AWS credentials are correctly set up before deploying the program.
+
+Ensure that you have set up the necessary environment variables (`SENDER_EMAIL` and `SENDER_PASS`) for the Gmail account used to send emails.
 
 ## Usage
 
