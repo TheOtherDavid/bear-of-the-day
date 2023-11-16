@@ -18,6 +18,7 @@ Resources:
           SENDER_EMAIL: !Sub ${SenderEmail}
           SENDER_PASS: !Sub ${SenderPass}
           FILE_PATH: !Sub ${FilePath}
+          AWS_BUCKET_NAME: !Sub ${BucketName}
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
