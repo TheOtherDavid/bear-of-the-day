@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import random
 import requests
+import sys
 import dalle
 import s3
 import send_email
@@ -25,7 +26,7 @@ def bear_of_the_day():
     image_url = dalle.generate_image(prompt)
     if image_url is None:
         print("Failed to generate image.")
-        return
+        sys.exit(1)
     print(image_url)
 
     # save the image to a file with the timestamp
@@ -33,7 +34,11 @@ def bear_of_the_day():
     print(image_path)
 
     bucket_name = os.environ['AWS_BUCKET_NAME']
-    s3.save_image_to_s3(image_url, bucket_name, image_path, prompt)
+    try:
+        s3.save_image_to_s3(image_url, bucket_name, image_path, prompt)
+    except Exception as e:
+        print(f"Failed to save image to S3: {e}")
+        sys.exit(1)
 
     # email the image to the user
     recipients = os.environ['RECIPIENTS'].split(',')
