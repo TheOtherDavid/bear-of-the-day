@@ -4,7 +4,7 @@ import smtplib
 import requests
 from email.message import EmailMessage
 
-def send_image_email(recipients, image_url, image_path, message_body):
+def send_image_email(recipients, image, image_path, message_body):
   sender_email = os.environ['SENDER_EMAIL']
   sender_pass = os.environ['SENDER_PASS']
   
@@ -15,9 +15,6 @@ def send_image_email(recipients, image_url, image_path, message_body):
   msg['To'] = ", ".join(recipients)
 
   msg.set_content(message_body)
-  
-  image = requests.get(image_url).content
-  image_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
 
   msg.add_attachment(image, maintype='image', subtype='jpeg', filename=image_path)
 

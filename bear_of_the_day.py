@@ -29,13 +29,15 @@ def bear_of_the_day():
         sys.exit(1)
     print(image_url)
 
+    image = requests.get(image_url).content
+
     # save the image to a file with the timestamp
     image_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
     print(image_path)
 
     bucket_name = os.environ['AWS_BUCKET_NAME']
     try:
-        s3.save_image_to_s3(image_url, bucket_name, image_path, prompt)
+        s3.save_image_to_s3(image, bucket_name, image_path, prompt)
     except Exception as e:
         print(f"Failed to save image to S3: {e}")
         sys.exit(1)
@@ -43,7 +45,7 @@ def bear_of_the_day():
     # email the image to the user
     recipients = os.environ['RECIPIENTS'].split(',')
     print("Sending email to " + str(recipients) + "...")
-    send_email.send_image_email(recipients, image_url, image_path, prompt)
+    send_email.send_image_email(recipients, image, image_path, prompt)
     print("Email sent!")
 
 def load_data_file(filename):
