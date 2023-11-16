@@ -33,7 +33,7 @@ def bear_of_the_day():
     print(image_path)
 
     bucket_name = os.environ['AWS_BUCKET_NAME']
-    s3.save_image_to_s3(image_url, bucket_name, image_path)
+    s3.save_image_to_s3(image_url, bucket_name, image_path, prompt)
 
     # email the image to the user
     recipients = os.environ['RECIPIENTS'].split(',')
