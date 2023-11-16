@@ -1,9 +1,10 @@
 import datetime
 import os
 import smtplib
+import requests
 from email.message import EmailMessage
 
-def send_image_email(recipients, image_path, message_body):
+def send_image_email(recipients, image_url, image_path, message_body):
   sender_email = os.environ['SENDER_EMAIL']
   sender_pass = os.environ['SENDER_PASS']
   
@@ -15,11 +16,10 @@ def send_image_email(recipients, image_path, message_body):
 
   msg.set_content(message_body)
   
-  with open(image_path, 'rb') as f:
-    image_data = f.read()
-    image_name = image_path.split('/')[-1]
+  image = requests.get(image_url).content
+  image_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
 
-  msg.add_attachment(image_data, maintype='image', subtype='jpeg', filename=image_name)
+  msg.add_attachment(image, maintype='image', subtype='jpeg', filename=image_path)
 
   with smtplib.SMTP('smtp.gmail.com', 587) as smtp: 
     smtp.ehlo()

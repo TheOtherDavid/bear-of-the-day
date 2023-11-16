@@ -21,19 +21,12 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
-            BucketName: 'bear-of-the-day'
+            BucketName: !Sub ${BucketName}
       Events:
         BearOfTheDay:
           Type: Schedule
           Properties:
             Schedule: cron(0 8 * * ? *)
-  BearOfTheDayBucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      BucketName: bear-of-the-day
-      AccessControl: PublicRead
-      WebsiteConfiguration:
-        IndexDocument: index.html
 
 Parameters:
   OpenAIKey:
@@ -45,4 +38,6 @@ Parameters:
   SenderPass:
     Type: String
   FilePath:
+    Type: String
+  BucketName:
     Type: String

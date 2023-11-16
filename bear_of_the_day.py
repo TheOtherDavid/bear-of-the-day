@@ -4,6 +4,7 @@ import os
 import random
 import requests
 import dalle
+import s3
 import send_email
 
 # This is an app that will randomly select a style and a scene from files, construct a prompt, and then call DALL-E image generation.
@@ -28,17 +29,16 @@ def bear_of_the_day():
     print(image_url)
 
     # save the image to a file with the timestamp
-    file_path = os.environ['FILE_PATH']
-    image_path = file_path + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
+    image_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
     print(image_path)
-    download_image(image_url, image_path)
-    # save the image to S3
-    #s3.save_image_to_s3(image_url)
+
+    bucket_name = os.environ['AWS_BUCKET_NAME']
+    s3.save_image_to_s3(image_url, bucket_name, image_path)
 
     # email the image to the user
     recipients = os.environ['RECIPIENTS'].split(',')
     print("Sending email to " + str(recipients) + "...")
-    send_email.send_image_email(recipients, image_path, prompt)
+    send_email.send_image_email(recipients, image_url, image_path, prompt)
     print("Email sent!")
 
 def load_data_file(filename):
