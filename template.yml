@@ -23,6 +23,12 @@ Resources:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
             BucketName: !Sub ${BucketName}
+        - Statement:
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource:
+              - !Sub arn:aws:s3:::${BucketName}/*
       Events:
         BearOfTheDay:
           Type: Schedule
