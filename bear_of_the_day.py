@@ -6,10 +6,10 @@ import os
 import random
 import requests
 import sys
-import config
-import dalle
-import s3
-import send_email
+import common.config as config
+import common.dalle as dalle
+import common.s3 as s3
+import common.send_email as send_email
 
 def bear_of_the_day():
     """
