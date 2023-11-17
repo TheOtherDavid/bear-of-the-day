@@ -23,6 +23,7 @@ def bear_of_the_day():
     
     if debug_mode:
         image = generate_blank_image()
+        prompt = "DEBUG MODE"
     else:
         # randomly select a style
         subject = random.choice(subjects)
