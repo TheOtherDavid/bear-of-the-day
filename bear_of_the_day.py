@@ -6,13 +6,26 @@ import os
 import random
 import requests
 import sys
+import config
 import dalle
 import s3
 import send_email
 
-# This is an app that will randomly select a style and a scene from files, construct a prompt, and then call DALL-E image generation.
-# The image will then be saved to an S3 bucket and emailed to the user.
 def bear_of_the_day():
+    """
+    This function generates an image using DALL-E based on a randomly selected style and scene.
+    The generated image is then saved to an S3 bucket and emailed to the user.
+
+    If the DEBUG_MODE environment variable is set to True, the function will generate a blank image instead.
+
+    The function reads the style and scene data from 'subjects.csv', 'styles.csv', and 'scenes.csv' files.
+
+    The AWS_BUCKET_NAME and RECIPIENTS environment variables must be set. RECIPIENTS is a comma-separated list of email addresses.
+
+    If the image generation or email sending fails, the function will print an error message and exit with a status code of 1.
+    """
+    
+    config.verify_environment()
     # Load Debug Mode Variable
     debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'
 
