@@ -22,6 +22,7 @@ def bear_of_the_day():
     scenes = load_data_file('scenes.csv')
     
     if debug_mode:
+        print("DEBUG MODE")
         image = generate_blank_image()
         prompt = "DEBUG MODE"
     else:
