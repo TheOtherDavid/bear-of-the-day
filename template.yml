@@ -17,7 +17,6 @@ Resources:
           RECIPIENTS: !Sub ${Recipients}
           SENDER_EMAIL: !Sub ${SenderEmail}
           SENDER_PASS: !Sub ${SenderPass}
-          FILE_PATH: !Sub ${FilePath}
           AWS_BUCKET_NAME: !Sub ${BucketName}
       Policies:
         - AWSLambdaBasicExecutionRole
@@ -42,8 +41,6 @@ Parameters:
   SenderEmail:
     Type: String
   SenderPass:
-    Type: String
-  FilePath:
     Type: String
   BucketName:
     Type: String
