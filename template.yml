@@ -49,6 +49,29 @@ Resources:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
             BucketName: !Sub ${BucketName}
+      Events:
+        GetLatestBearApi:
+          Type: Api
+          Properties:
+            Path: /bear
+            Method: get
+  BearApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        swagger: '2.0'
+        info:
+          title: Bear API
+        paths:
+          /bear:
+            get:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetLatestBearFunction.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: aws_proxy
 Parameters:
   OpenAIKey:
     Type: String
