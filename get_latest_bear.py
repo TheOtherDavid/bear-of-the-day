@@ -1,11 +1,13 @@
 import boto3
 import os
+import base64
+import json
 from dotenv import load_dotenv
-from datetime import datetime
 
 s3 = boto3.client('s3')
 
 def get_latest_bear():
+    print("Begin get_latest_bear function")
     bucketName = os.environ['AWS_BUCKET_NAME']
     # Get list of objects in bucket
     response = s3.list_objects_v2(Bucket=bucketName)
@@ -18,22 +20,31 @@ def get_latest_bear():
             latest_object = obj
 
     obj = s3.get_object(Bucket=bucketName, Key=latest_object['Key'])
+    print("Object retrieved from S3")
 
     metadata = obj['Metadata']
 
+    print(metadata)
+
+    body_content = base64.b64encode(obj['Body'].read()).decode()
+
+
     return {
+        'isBase64Encoded': True,
         'statusCode': 200,
-        'body': obj['Body'].read(),
+        'body': json.dumps({
+            'image': body_content,
+            'metadata': metadata
+        }),
         'headers': {
-            'Content-Type': 'image/*' 
-        },
-        'metadata': metadata
+            'Content-Type': 'application/json' 
+        }
     }
 
 # AWS Lambda handler
 def lambda_handler(event, context):
     try:
-        get_latest_bear()
+        return get_latest_bear()
     except Exception as e:
         print(f"Error: {e}")
         raise e
