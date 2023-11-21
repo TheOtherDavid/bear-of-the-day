@@ -2,6 +2,7 @@ import boto3
 import os
 import base64
 import json
+from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
 
 s3 = boto3.client('s3')
@@ -26,19 +27,27 @@ def get_latest_bear():
 
     print(metadata)
 
-    body_content = base64.b64encode(obj['Body'].read()).decode()
+    # Generate a presigned URL for the object
+    try:
+        response = s3.generate_presigned_url('get_object',
+                                              Params={'Bucket': bucketName,
+                                                      'Key': latest_object['Key']},
+                                              ExpiresIn=3600)
+    except NoCredentialsError:
+        print("Credentials not available")
+        return None
 
+    print("Presigned URL: %s" % response)
 
     return {
-        'isBase64Encoded': True,
         'statusCode': 200,
         'body': json.dumps({
-            'image': body_content,
+            'url': response,
             'metadata': metadata
         }),
         'headers': {
-            'Content-Type': 'application/json' 
-        }
+            'Content-Type': 'application/json',
+        },
     }
 
 # AWS Lambda handler
