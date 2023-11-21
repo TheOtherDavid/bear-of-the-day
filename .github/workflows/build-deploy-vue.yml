@@ -39,5 +39,5 @@ jobs:
         
     - name: Push build folder to Amplify
       run: |
-        amplify publish --appId ${{ secrets.AMPLIFY_APP_ID }}
+        amplify push --simple
       working-directory: ./frontend
