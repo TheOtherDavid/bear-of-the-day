@@ -22,9 +22,11 @@ jobs:
         
     - name: Install dependencies
       run: npm install
+      working-directory: ./frontend
       
     - name: Build Vue app
       run: npm run build
+      working-directory: ./frontend
       
     - name: Install Amplify CLI 
       run: |
