@@ -73,6 +73,19 @@ Resources:
                 httpMethod: POST
                 type: aws_proxy
                 credentials: !GetAtt ApiGatewayExecutionRole.Arn
+            options:
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                passthroughBehavior: when_no_match
+                type: mock
               responses:
                 '200':
                   description: '200 response'
@@ -82,7 +95,7 @@ Resources:
                       default: '*'
                     Access-Control-Allow-Methods:
                       type: 'string'
-                      default: 'GET'
+                      default: 'GET,OPTIONS'
                     Access-Control-Allow-Headers:
                       type: 'string'
                       default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
