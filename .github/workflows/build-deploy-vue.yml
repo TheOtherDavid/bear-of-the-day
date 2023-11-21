@@ -24,10 +24,10 @@ jobs:
       run: |
         npm install -g @aws-amplify/cli
 
-    - name: Pull Amplify backend
-      run: |
-        amplify pull --appId ${{ secrets.AMPLIFY_APP_ID }} --yes
-      working-directory: ./frontend
+    # - name: Pull Amplify backend
+    #   run: |
+    #     amplify pull --appId ${{ secrets.AMPLIFY_APP_ID }} --yes
+    #   working-directory: ./frontend
       
     - name: Install dependencies
       run: npm install
@@ -40,3 +40,4 @@ jobs:
     - name: Push build folder to Amplify
       run: |
         amplify publish --appId ${{ secrets.AMPLIFY_APP_ID }}
+      working-directory: ./frontend
