@@ -73,6 +73,19 @@ Resources:
                 httpMethod: POST
                 type: aws_proxy
                 credentials: !GetAtt ApiGatewayExecutionRole.Arn
+              responses:
+                '200':
+                  description: '200 response'
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: 'string'
+                      default: '*'
+                    Access-Control-Allow-Methods:
+                      type: 'string'
+                      default: 'GET'
+                    Access-Control-Allow-Headers:
+                      type: 'string'
+                      default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
   ApiGatewayExecutionRole:
     Type: AWS::IAM::Role
     Properties:
