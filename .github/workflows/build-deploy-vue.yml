@@ -23,21 +23,12 @@ jobs:
     - name: Install Amplify CLI 
       run: |
         npm install -g @aws-amplify/cli
-
-    # - name: Pull Amplify backend
-    #   run: |
-    #     amplify pull --appId ${{ secrets.AMPLIFY_APP_ID }} --yes
-    #   working-directory: ./frontend
-      
+   
     - name: Install dependencies
       run: npm install
       working-directory: ./frontend
-      
-    - name: Build Vue app
-      run: npm run build
-      working-directory: ./frontend
-        
-    - name: Push build folder to Amplify
+
+    - name: Publish to Amplify
       run: |
-        amplify push --simple
+        amplify publish --simple
       working-directory: ./frontend
