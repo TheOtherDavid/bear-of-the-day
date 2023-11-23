@@ -8,6 +8,8 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    env:
+      VUE_APP_BACKEND_URL: ${{ secrets.VUE_APP_BACKEND_URL }}
 
     steps:
     - name: Checkout code
@@ -31,6 +33,11 @@ jobs:
     - name: Pull Amplify project
       run: |
         amplify pull --appId ${{ secrets.AMPLIFY_APP_ID }} --envName ${{ vars.AMPLIFY_ENV_NAME }} --awsConfig "{\"accessKeyId\":\"${{ secrets.AWS_ACCESS_KEY_ID }}\",\"secretAccessKey\":\"${{ secrets.AWS_SECRET_ACCESS_KEY }}\",\"region\":\"us-east-2\"}" --yes
+      working-directory: ./frontend
+
+    - name: Set environment variable in Amplify
+      run: |
+        aws amplify update-app --app-id ${{ secrets.AMPLIFY_APP_ID }} --environment-variables '[{"name":"VUE_APP_BACKEND_URL","value":"${{ env.VUE_APP_BACKEND_URL }}"}]'
       working-directory: ./frontend
 
     - name: Publish to Amplify

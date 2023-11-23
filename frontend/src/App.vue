@@ -16,7 +16,7 @@ export default {
     }
   },
   created() {
-    fetch('https://ly8ms91c44.execute-api.us-east-2.amazonaws.com/Prod/bear')
+    fetch(process.env.VUE_APP_BACKEND_URL)
       .then(response => response.json())
       .then(data => {
         this.imageUrl = data.url;
