@@ -28,6 +28,11 @@ jobs:
       run: npm install
       working-directory: ./frontend
 
+    - name: Pull Amplify project
+      run: |
+        amplify pull --appId ${{ secrets.AMPLIFY_APP_ID }} --envName ${{ vars.AMPLIFY_ENV_NAME }}
+      working-directory: ./frontend
+
     - name: Publish to Amplify
       run: |
         amplify publish --simple
