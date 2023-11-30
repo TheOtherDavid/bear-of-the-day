@@ -18,7 +18,7 @@ def bear_of_the_day():
 
     If the DEBUG_MODE environment variable is set to True, the function will generate a blank image instead.
 
-    The function reads the style and scene data from 'subjects.csv', 'styles.csv', and 'scenes.csv' files.
+    The function reads the style and scene data from 'subjects.csv', 'spirits.csv', and 'scenes.csv' files.
 
     The AWS_BUCKET_NAME and RECIPIENTS environment variables must be set. RECIPIENTS is a comma-separated list of email addresses.
 
@@ -30,20 +30,25 @@ def bear_of_the_day():
     debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'
 
     # load the style CSV file into an array
-    subjects = load_data_file('subjects.csv')
-    styles = load_data_file('styles.csv')
-    scenes = load_data_file('scenes.csv')
+    subjects = load_data_file('backend/subjects.csv')
+    scenes = load_data_file('backend/scenes.csv')
+    spirits = load_data_file('backend/spirits.csv')
     
     if debug_mode:
         print("DEBUG MODE")
         image = generate_blank_image()
         prompt = "DEBUG MODE"
     else:
-        # randomly select a style
+        # randomly select image elements
         subject = random.choice(subjects)
-        style = random.choice(styles)
         scene = random.choice(scenes)
-        prompt = subject + " " + scene + " in the style of " + style 
+
+        spirits_copy = spirits[:]
+        spirit1 = random.choice(spirits)
+        spirits_copy.remove(spirit1)
+        spirit2 = random.choice(spirits_copy)
+
+        prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
         print(prompt)
         # generate the image
         image_url = dalle.generate_image(prompt)
