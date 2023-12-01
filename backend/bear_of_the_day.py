@@ -30,9 +30,11 @@ def bear_of_the_day():
     debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'
 
     # load the style CSV file into an array
-    subjects = load_data_file('backend/subjects.csv')
-    scenes = load_data_file('backend/scenes.csv')
-    spirits = load_data_file('backend/spirits.csv')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    subjects = load_data_file(os.path.join(script_dir, 'subjects.csv'))
+    scenes = load_data_file(os.path.join(script_dir, 'scenes.csv'))
+    spirits = load_data_file(os.path.join(script_dir, 'spirits.csv'))
     
     if debug_mode:
         print("DEBUG MODE")
