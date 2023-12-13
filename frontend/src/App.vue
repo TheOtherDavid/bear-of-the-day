@@ -16,6 +16,7 @@ export default {
     }
   },
   created() {
+    console.log('Backend URL:', process.env.VUE_APP_BACKEND_URL);
     fetch(process.env.VUE_APP_BACKEND_URL)
       .then(response => response.json())
       .then(data => {
