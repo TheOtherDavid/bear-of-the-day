@@ -1,8 +1,10 @@
 <template>
-  <h1>Bear Of The Day!</h1>
-  <div>
-    <img v-if="imageUrl" :src="imageUrl" class="bear-image">
-    <p v-if="metadata">{{ metadata.prompt }}</p>
+  <div id="content">
+    <h1>Bear Of The Day!</h1>
+    <div class="image-container">
+      <img v-if="imageUrl" :src="imageUrl" class="bear-image">
+      <p v-if="metadata">{{ metadata.prompt }}</p>
+    </div>
   </div>
 </template>
 
@@ -28,20 +30,54 @@ export default {
 </script>
 
 <style>
-body {
-  background-color: #888888;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
+body {
+  background-color: #f4f4f4;
+  font-family: 'Roboto', sans-serif;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #333;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
 .bear-image {
   width: 40%;
   height: auto;
-  border: 10px solid #2c3e50;
+  border: none;
+  box-shadow: 0px 10px 18px -7px rgba(0,0,0,0.75);
 }
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+p {
+  font-size: 1.2em;
+  color: #777;
 }
 </style>
