@@ -55,6 +55,21 @@ Resources:
           Properties:
             Path: /bear
             Method: get
+  GetBearsBatchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: get_bears_batch.lambda_handler
+      Runtime: python3.8
+      Environment:
+        Variables:
+          AWS_BUCKET_NAME: !Sub ${BucketName}
+      Events:
+        GetBearsBatch:
+          Type: Api
+          Properties:
+            Path: /get_bears_batch
+            Method: get
   BearApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -99,6 +114,15 @@ Resources:
                     Access-Control-Allow-Headers:
                       type: 'string'
                       default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+          /get_bears_batch:
+            get:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetBearsBatchFunction.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: aws_proxy
+                credentials: !GetAtt ApiGatewayExecutionRole.Arn
   ApiGatewayExecutionRole:
     Type: AWS::IAM::Role
     Properties:
