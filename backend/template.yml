@@ -58,9 +58,12 @@ Resources:
   GetBearsBatchFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: backend/
       Handler: get_bears_batch.lambda_handler
       Runtime: python3.8
+      CodeUri: .
+      Description: Returns the latest bear image from the S3 bucket.
+      MemorySize: 128
+      Timeout: 30
       Environment:
         Variables:
           AWS_BUCKET_NAME: !Sub ${BucketName}
