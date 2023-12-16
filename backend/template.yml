@@ -67,6 +67,10 @@ Resources:
       Environment:
         Variables:
           AWS_BUCKET_NAME: !Sub ${BucketName}
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - S3ReadPolicy:
+          BucketName: !Sub ${BucketName}
       Events:
         GetBearsBatch:
           Type: Api
@@ -143,7 +147,10 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: lambda:InvokeFunction
-                Resource: !GetAtt GetLatestBearFunction.Arn
+                Resource: 
+                  - !GetAtt GetLatestBearFunction.Arn
+                  - !GetAtt GetBearsBatchFunction.Arn
+                                
 Parameters:
   OpenAIKey:
     Type: String
