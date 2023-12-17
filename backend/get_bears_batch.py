@@ -2,6 +2,7 @@ import boto3
 import os
 import base64
 import json
+import logging
 from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
 
@@ -44,8 +45,19 @@ def get_bears_batch(batch_size, offset):
 # AWS Lambda handler
 def lambda_handler(event, context):
     try:
-        batch_size = event.get('batch_size', 1)  # get batch size from event, default to 1 if not provided
-        offset = event.get('offset', 0)  # get offset from event, default to 0 if not provided
+        body = json.loads(event['body'])
+        if 'batch_size' in body:
+            batch_size = body['batch_size']
+        else:
+            logging.warning("batch_size not provided in event, defaulting to 1")
+            batch_size = 1
+
+        if 'offset' in body:
+            offset = body['offset']
+        else:
+            logging.warning("offset not provided in event, defaulting to 0")
+            offset = 0
+
         return get_bears_batch(batch_size, offset)
     except Exception as e:
         print(f"Error: {e}")
