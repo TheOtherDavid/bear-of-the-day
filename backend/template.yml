@@ -61,7 +61,7 @@ Resources:
       Handler: get_bears_batch.lambda_handler
       Runtime: python3.8
       CodeUri: .
-      Description: Returns the latest bear image from the S3 bucket.
+      Description: Returns more bears from the S3 bucket, in reverse chronological order.
       MemorySize: 128
       Timeout: 30
       Environment:
@@ -76,7 +76,7 @@ Resources:
           Type: Api
           Properties:
             Path: /get_bears_batch
-            Method: get
+            Method: post
   BearApi:
     Type: AWS::Serverless::Api
     Properties:
