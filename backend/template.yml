@@ -121,7 +121,7 @@ Resources:
                     Access-Control-Allow-Headers:
                       type: 'string'
                       default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
-          /more_bears:
+          /morebears:
             post:
               x-amazon-apigateway-integration:
                 uri:
