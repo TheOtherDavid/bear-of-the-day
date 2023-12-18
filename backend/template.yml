@@ -75,7 +75,7 @@ Resources:
         GetBearsBatch:
           Type: Api
           Properties:
-            Path: /get_bears_batch
+            Path: /morebears
             Method: post
   BearApi:
     Type: AWS::Serverless::Api
