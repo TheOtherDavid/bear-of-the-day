@@ -2,17 +2,18 @@
   <div id="content">
     <h1>Bear Of The Day!</h1>
     <BearImage :imageUrl="imageUrl" :metadata="metadata" />
-
+    <LoadMoreBears />
   </div>
 </template>
 
 <script>
 import BearImage from './components/BearImage.vue'
-
+import LoadMoreBears from './components/LoadMoreBears.vue'
 export default {
   name: 'App',
   components: {
-    BearImage
+    BearImage,
+    LoadMoreBears
   },
   data() {
     return {
