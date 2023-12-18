@@ -1,16 +1,19 @@
 <template>
   <div id="content">
     <h1>Bear Of The Day!</h1>
-    <div class="image-container">
-      <img v-if="imageUrl" :src="imageUrl" class="bear-image">
-      <p v-if="metadata">{{ metadata.prompt }}</p>
-    </div>
+    <BearImage :imageUrl="imageUrl" :metadata="metadata" />
+
   </div>
 </template>
 
 <script>
+import BearImage from './components/BearImage.vue'
+
 export default {
   name: 'App',
+  components: {
+    BearImage
+  },
   data() {
     return {
       imageUrl: null,
@@ -18,7 +21,6 @@ export default {
     }
   },
   created() {
-    console.log('Backend URL:', process.env.VUE_APP_BACKEND_URL);
     fetch(process.env.VUE_APP_BACKEND_URL)
       .then(response => response.json())
       .then(data => {
