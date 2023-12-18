@@ -136,7 +136,7 @@ Resources:
                   default:
                     statusCode: '200'
                     responseParameters:
-                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
                       method.response.header.Access-Control-Allow-Origin: "'*'"
                       method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
                 requestTemplates:
@@ -152,7 +152,7 @@ Resources:
                       default: '*'
                     Access-Control-Allow-Methods:
                       type: 'string'
-                      default: 'GET,OPTIONS'
+                      default: 'POST,OPTIONS'
                     Access-Control-Allow-Headers:
                       type: 'string'
                       default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
