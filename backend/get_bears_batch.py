@@ -46,8 +46,8 @@ def get_bears_batch(batch_size, offset):
 def lambda_handler(event, context):
     try:
         body = json.loads(event['body'])
-        if 'batch_size' in body:
-            batch_size = body['batch_size']
+        if 'size' in body:
+            batch_size = body['size']
         else:
             logging.warning("batch_size not provided in event, defaulting to 1")
             batch_size = 1
