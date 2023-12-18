@@ -17,22 +17,27 @@ def get_bears_batch(batch_size, offset):
     sorted_objects = sorted(response['Contents'], key=lambda obj: obj['LastModified'], reverse=True)
     batch_objects = sorted_objects[offset:offset + batch_size]
     # Generate presigned URLs for the objects
-    urls = []
+    objects = []
     for obj in batch_objects:
         try:
-            response = s3.generate_presigned_url('get_object',
+            response = s3.get_object(Bucket=bucketName, Key=obj['Key'])
+            metadata = response['Metadata']
+            presigned_url = s3.generate_presigned_url('get_object',
                                                   Params={'Bucket': bucketName,
                                                           'Key': obj['Key']},
                                                   ExpiresIn=3600)
-            urls.append(response)
+            objects.append({
+                'url': presigned_url,
+                'metadata': metadata
+            })
         except NoCredentialsError:
             print("Credentials not available")
             return None
-    print("Presigned URLs: %s" % urls)
+    print("Presigned URLs: %s" % objects)
     return {
         'statusCode': 200,
         'body': json.dumps({
-            'urls': urls
+            'images': objects
         }),
         'headers': {
             'Content-Type': 'application/json',
