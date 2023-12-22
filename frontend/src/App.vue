@@ -35,7 +35,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   color: #333;
 }
 
@@ -51,6 +51,8 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: auto;
+  overflow: auto
 }
 
 h1 {
