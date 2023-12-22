@@ -1,33 +1,19 @@
 <template>
   <div id="content">
     <h1>Bear Of The Day!</h1>
-    <BearImage :imageUrl="imageUrl" :metadata="metadata" />
+    <GetLatestBear />
     <LoadMoreBears />
   </div>
 </template>
 
 <script>
-import BearImage from './components/BearImage.vue'
+import GetLatestBear from './components/GetLatestBear.vue'
 import LoadMoreBears from './components/LoadMoreBears.vue'
 export default {
   name: 'App',
   components: {
-    BearImage,
+    GetLatestBear,
     LoadMoreBears
-  },
-  data() {
-    return {
-      imageUrl: null,
-      metadata: null
-    }
-  },
-  created() {
-    fetch(process.env.VUE_APP_BACKEND_URL)
-      .then(response => response.json())
-      .then(data => {
-        this.imageUrl = data.url;
-        this.metadata = data.metadata;
-      });
   }
 }
 </script>

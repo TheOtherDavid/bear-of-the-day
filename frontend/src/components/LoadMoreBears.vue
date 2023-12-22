@@ -1,19 +1,25 @@
 <template>
     <div>
         <div v-for="(image, index) in images" :key="index">
-            <img :src="image" alt="Bear image" />
+            <BearImage :imageUrl="image.url" :metadata="image.metadata" />
         </div>
         <button @click="loadMore">Load more bears</button>
     </div>
 </template>
 
 <script>
+import BearImage from './BearImage.vue'
+
 export default {
+    name: 'LoadMoreBears',
+    components: {
+        BearImage
+    },
     data() {
         return {
             images: [],
             offset: 1,
-            size: 5
+            size: 2
         }
     },
     methods: {
@@ -31,7 +37,7 @@ export default {
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    this.images.push(...data.urls);
+                    this.images.push(...data.images);
                     this.offset += this.size;
                 });
         }
