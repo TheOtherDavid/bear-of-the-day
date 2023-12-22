@@ -3,7 +3,9 @@
         <div v-for="(image, index) in images" :key="index">
             <BearImage :imageUrl="image.url" :metadata="image.metadata" />
         </div>
-        <button @click="loadMore">Load more bears</button>
+        <div class="button-container">
+            <button class="load-more-button" @click="loadMore">Load more bears</button>
+        </div>
     </div>
 </template>
 
@@ -44,3 +46,24 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.load-more-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+</style>
