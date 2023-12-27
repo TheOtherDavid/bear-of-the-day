@@ -50,7 +50,6 @@ def bear_of_the_day():
         spirits_copy.remove(spirit1)
         spirit2 = random.choice(spirits_copy)
 
-        # Add Christmas for December
         prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
         print(prompt)
         # generate the image
