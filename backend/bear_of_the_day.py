@@ -51,7 +51,7 @@ def bear_of_the_day():
         spirit2 = random.choice(spirits_copy)
 
         # Add Christmas for December
-        prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2 + ", Christmassy"
+        prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
         print(prompt)
         # generate the image
         image_url = dalle.generate_image(prompt)
