@@ -1,7 +1,5 @@
 import datetime
 from dotenv import load_dotenv
-from PIL import Image
-import io
 import os
 import random
 import requests
@@ -9,7 +7,8 @@ import sys
 import common.config as config
 import common.dalle as dalle
 import common.s3 as s3
-import common.send_email as send_email
+
+sns = boto3.client('sns')
 
 def bear_of_the_day():
     """
@@ -26,8 +25,6 @@ def bear_of_the_day():
     """
     
     config.verify_environment()
-    # Load Debug Mode Variable
-    debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'
 
     # load the style CSV file into an array
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -36,29 +33,23 @@ def bear_of_the_day():
     scenes = load_data_file(os.path.join(script_dir, 'scenes.csv'))
     spirits = load_data_file(os.path.join(script_dir, 'spirits.csv'))
     
-    if debug_mode:
-        print("DEBUG MODE")
-        image = generate_blank_image()
-        prompt = "DEBUG MODE"
-    else:
-        # randomly select image elements
-        subject = random.choice(subjects)
-        scene = random.choice(scenes)
+    # randomly select image elements
+    subject = random.choice(subjects)
+    scene = random.choice(scenes)
 
-        spirits_copy = spirits[:]
-        spirit1 = random.choice(spirits)
-        spirits_copy.remove(spirit1)
-        spirit2 = random.choice(spirits_copy)
+    spirits_copy = spirits[:]
+    spirit1 = random.choice(spirits)
+    spirits_copy.remove(spirit1)
+    spirit2 = random.choice(spirits_copy)
 
-        prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
-        print(prompt)
-        # generate the image
-        image_url = dalle.generate_image(prompt)
-        if image_url is None:
-            print("Failed to generate image.")
-            sys.exit(1)
-        print(image_url)
-        image = requests.get(image_url).content
+    prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
+    print(prompt)
+    image_url = dalle.generate_image(prompt)
+    if image_url is None:
+        print("Failed to generate image.")
+        sys.exit(1)
+    print(image_url)
+    image = requests.get(image_url).content
 
     # save the image to a file with the timestamp
     image_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
@@ -70,15 +61,11 @@ def bear_of_the_day():
     except Exception as e:
         print(f"Failed to save image to S3: {e}")
         sys.exit(1)
-
-    # email the image to the user
-    if debug_mode:
-        recipients = [os.environ['DEBUG_RECIPIENTS']]
-    else:
-        recipients = os.environ['RECIPIENTS'].split(',')
-    print("Sending email to " + str(recipients) + "...")
-    send_email.send_image_email(recipients, image, image_path, prompt)
-    print("Email sent!")
+    # Publish a message to the SNS topic to trigger downstream functions
+    sns.publish(
+        TopicArn='arn:aws:sns:region:account-id:BearOfTheDayTopic',
+        Message='BearOfTheDayFunction completed'
+    )
 
 def load_data_file(filename):
     with open(filename) as f:
@@ -90,15 +77,6 @@ def download_image(url, file_path):
     with open(file_path, 'wb') as f:
         f.write(response.content)
 
-def generate_blank_image():
-    # generate a blank image
-    image = Image.new('RGB', (100, 100))
-    byte_arr = io.BytesIO()
-    image.save(byte_arr, format='JPEG')
-    image = byte_arr.getvalue()
-    return image
-
-# AWS Lambda handler
 def lambda_handler(event, context):
     try:
         bear_of_the_day()

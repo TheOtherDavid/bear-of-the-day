@@ -18,6 +18,7 @@ Resources:
           SENDER_EMAIL: !Sub ${SenderEmail}
           SENDER_PASS: !Sub ${SenderPass}
           AWS_BUCKET_NAME: !Sub ${BucketName}
+          SNS_TOPIC_ARN: !Ref BearOfTheDayTopic
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3ReadPolicy:
@@ -33,6 +34,36 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: cron(0 13 * * ? *)
+  SendBearEmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: send_bear_email.lambda_handler
+      Runtime: python3.8
+      CodeUri: .
+      Description: Sends an email with a bear picture.
+      MemorySize: 128
+      Timeout: 60
+      Environment:
+        Variables:
+          RECIPIENTS: !Sub ${Recipients}
+          SENDER_EMAIL: !Sub ${SenderEmail}
+          SENDER_PASS: !Sub ${SenderPass}
+          AWS_BUCKET_NAME: !Sub ${BucketName}
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - S3ReadPolicy:
+            BucketName: !Sub ${BucketName}
+        - Statement:
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource:
+              - !Sub arn:aws:s3:::${BucketName}/*
+      Events:
+        BearOfTheDayTopic:
+          Type: SNS
+          Properties:
+            Topic: !Ref BearOfTheDayTopic
   GetLatestBearFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -176,7 +207,8 @@ Resources:
                 Resource: 
                   - !GetAtt GetLatestBearFunction.Arn
                   - !GetAtt GetBearsBatchFunction.Arn
-                                
+  BearOfTheDayTopic:
+    Type: AWS::SNS::Topic
 Parameters:
   OpenAIKey:
     Type: String
