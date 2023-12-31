@@ -11,20 +11,14 @@ def get_latest_bear():
     print("Begin get_latest_bear function")
     bucketName = os.environ['AWS_BUCKET_NAME']
     
-    obj = s3.get_latest_file(bucketName)
+    obj, metadata, image_path = s3.get_latest_file(bucketName)
     print("Object retrieved from S3")
-
-    metadata = obj['Metadata']
-
-    print(metadata)
-    prompt = metadata['prompt']
-    print(prompt)
 
     # Generate a presigned URL for the object
     try:
         response = boto_s3.generate_presigned_url('get_object',
                                               Params={'Bucket': bucketName,
-                                                      'Key': obj['Key']},
+                                                      'Key': image_path},
                                               ExpiresIn=3600)
     except NoCredentialsError:
         print("Credentials not available")

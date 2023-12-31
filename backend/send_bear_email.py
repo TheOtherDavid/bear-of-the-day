@@ -18,14 +18,10 @@ def send_bear_image():
         image_path = "debug.jpg"
         recipients = [os.environ['DEBUG_RECIPIENTS']]
     else:
-        obj = s3.get_latest_file(bucketName)
+        obj, metadata, image_path = s3.get_latest_file(bucketName)
         print("Object retrieved from S3")
-        metadata = obj['Metadata']
         prompt = metadata['prompt']
         recipients = os.environ['RECIPIENTS'].split(',')
-
-
-    print(metadata)
 
     print("Sending email to " + str(recipients) + "...")
     send_email.send_image_email(recipients, obj, image_path, prompt)

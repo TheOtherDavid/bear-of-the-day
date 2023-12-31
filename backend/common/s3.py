@@ -66,4 +66,4 @@ def get_latest_file(bucketName):
     obj = s3.get_object(Bucket=bucketName, Key=image_path)
     metadata = obj['Metadata']
 
-    return obj
+    return obj, metadata, image_path
