@@ -12,7 +12,7 @@ def send_image_email(recipients, image, image_path, message_body):
   #Include timestamp as Day Month Year, with the month spelled out
   msg['Subject'] = "Bear of the Day for " + datetime.datetime.now().strftime("%d %B %Y") 
   msg['From'] = sender_email
-  msg['To'] = ", ".join(recipients)
+  msg['Bcc'] = ", ".join(recipients)
 
   msg.set_content(message_body)
 
