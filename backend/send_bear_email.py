@@ -1,9 +1,12 @@
+import boto3
 from dotenv import load_dotenv
 from PIL import Image
 import io
 import os
 import common.s3 as s3
 import common.send_email as send_email
+
+s3 = boto3.client('s3')
 
 def send_bear_image():
     debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'    
