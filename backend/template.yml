@@ -8,7 +8,7 @@ Resources:
       Handler: bear_of_the_day.lambda_handler
       Runtime: python3.8
       CodeUri: .
-      Description: Sends an email with a bear picture of the day.
+      Description: Generates a bear image and saves it to S3
       MemorySize: 128
       Timeout: 60
       Environment:
@@ -27,6 +27,7 @@ Resources:
           - Effect: Allow
             Action:
               - s3:PutObject
+              - SNS:Publish
             Resource:
               - !Sub arn:aws:s3:::${BucketName}/*
       Events:
