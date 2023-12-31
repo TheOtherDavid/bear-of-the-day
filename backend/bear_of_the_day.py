@@ -64,7 +64,7 @@ def bear_of_the_day():
         sys.exit(1)
     # Publish a message to the SNS topic to trigger downstream functions
     sns.publish(
-        TopicArn='arn:aws:sns:region:account-id:BearOfTheDayTopic',
+        TopicArn=os.environ['AWS_BUCKET_NAME'],
         Message='BearOfTheDayFunction completed'
     )
 
