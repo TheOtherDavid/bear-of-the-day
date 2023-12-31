@@ -12,7 +12,7 @@ def send_bear_image():
 
     if debug_mode:
         print("DEBUG MODE")
-        obj = generate_blank_image()
+        image_data = generate_blank_image()
         prompt = "DEBUG MODE"
         metadata = {"prompt": prompt}
         image_path = "debug.jpg"
@@ -20,11 +20,12 @@ def send_bear_image():
     else:
         obj, metadata, image_path = s3.get_latest_file(bucketName)
         print("Object retrieved from S3")
+        image_data = obj['Body'].read()
         prompt = metadata['prompt']
         recipients = os.environ['RECIPIENTS'].split(',')
 
     print("Sending email to " + str(recipients) + "...")
-    send_email.send_image_email(recipients, obj, image_path, prompt)
+    send_email.send_image_email(recipients, image_data, image_path, prompt)
     print("Email sent!")
 
 def generate_blank_image():
