@@ -17,7 +17,7 @@ def send_bear_image():
         print("DEBUG MODE")
         obj = generate_blank_image()
         prompt = "DEBUG MODE"
-        metadata = "DEBUG MODE"
+        metadata = {"prompt": prompt}
         image_path = "debug.jpg"
         recipients = [os.environ['DEBUG_RECIPIENTS']]
     else:
