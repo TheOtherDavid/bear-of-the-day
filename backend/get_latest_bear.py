@@ -1,37 +1,30 @@
 import boto3
 import os
-import base64
 import json
+import common.s3 as s3
 from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
 
-s3 = boto3.client('s3')
+boto_s3 = boto3.client('s3')
 
 def get_latest_bear():
     print("Begin get_latest_bear function")
     bucketName = os.environ['AWS_BUCKET_NAME']
-    # Get list of objects in bucket
-    response = s3.list_objects_v2(Bucket=bucketName)
-
-    # Find latest object based on LastModified
-    latest_object = None 
-    for obj in response['Contents']:
-        obj_time = obj['LastModified']
-        if latest_object is None or obj_time > latest_object['LastModified']:
-            latest_object = obj
-
-    obj = s3.get_object(Bucket=bucketName, Key=latest_object['Key'])
+    
+    obj = s3.get_latest_file(bucketName)
     print("Object retrieved from S3")
 
     metadata = obj['Metadata']
 
     print(metadata)
+    prompt = metadata['prompt']
+    print(prompt)
 
     # Generate a presigned URL for the object
     try:
-        response = s3.generate_presigned_url('get_object',
+        response = boto_s3.generate_presigned_url('get_object',
                                               Params={'Bucket': bucketName,
-                                                      'Key': latest_object['Key']},
+                                                      'Key': obj['Key']},
                                               ExpiresIn=3600)
     except NoCredentialsError:
         print("Credentials not available")

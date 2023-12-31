@@ -50,3 +50,20 @@ def get_object_with_metadata(bucket_name, key):
     response = s3.get_object(Bucket=bucket_name, Key=key)
 
     return response
+
+def get_latest_file(bucketName):
+    s3 = boto3.client('s3')
+    response = s3.list_objects_v2(Bucket=bucketName)
+
+    latest_object = None 
+    for obj in response['Contents']:
+        obj_time = obj['LastModified']
+        if latest_object is None or obj_time > latest_object['LastModified']:
+            latest_object = obj
+
+    image_path = latest_object['Key']
+
+    obj = s3.get_object(Bucket=bucketName, Key=image_path)
+    metadata = obj['Metadata']
+
+    return obj

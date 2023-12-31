@@ -1,12 +1,9 @@
-import boto3
 from dotenv import load_dotenv
 from PIL import Image
 import io
 import os
 import common.s3 as s3
 import common.send_email as send_email
-
-s3 = boto3.client('s3')
 
 def send_bear_image():
     debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'    
@@ -21,19 +18,7 @@ def send_bear_image():
         image_path = "debug.jpg"
         recipients = [os.environ['DEBUG_RECIPIENTS']]
     else:
-        # Get list of objects in bucket
-        response = s3.list_objects_v2(Bucket=bucketName)
-
-        # Find latest object based on LastModified
-        latest_object = None 
-        for obj in response['Contents']:
-            obj_time = obj['LastModified']
-            if latest_object is None or obj_time > latest_object['LastModified']:
-                latest_object = obj
-
-        image_path = obj['Key']
-
-        obj = s3.get_object(Bucket=bucketName, Key=image_path)
+        obj = s3.get_latest_file(bucketName)
         print("Object retrieved from S3")
         metadata = obj['Metadata']
         prompt = metadata['prompt']
