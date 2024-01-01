@@ -27,9 +27,13 @@ Resources:
           - Effect: Allow
             Action:
               - s3:PutObject
-              - SNS:Publish
             Resource:
               - !Sub arn:aws:s3:::${BucketName}/*
+          - Effect: Allow
+            Action:
+              - SNS:Publish
+            Resource:
+              - !Ref BearOfTheDayTopic
       Events:
         BearOfTheDay:
           Type: Schedule
