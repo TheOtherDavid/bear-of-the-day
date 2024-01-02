@@ -27,21 +27,25 @@ def bear_of_the_day():
     
     config.verify_environment()
 
-    # load the style CSV file into an array
+    # load the CSV files into arrays
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    subjects = load_data_file(os.path.join(script_dir, 'subjects.csv'))
-    scenes = load_data_file(os.path.join(script_dir, 'scenes.csv'))
-    spirits = load_data_file(os.path.join(script_dir, 'spirits.csv'))
+    subjects_file = load_data_file(os.path.join(script_dir, 'subjects.csv'))
+    scenes_file = load_data_file(os.path.join(script_dir, 'scenes.csv'))
+    spirits_file = load_data_file(os.path.join(script_dir, 'spirits.csv'))
     
     # randomly select image elements
-    subject = random.choice(subjects)
-    scene = random.choice(scenes)
+    subject = random.choice(subjects_file)
+    scene = random.choice(scenes_file)
 
-    spirits_copy = spirits[:]
-    spirit1 = random.choice(spirits)
+    spirits_copy = spirits_file[:]
+    spirit1 = random.choice(spirits_file)
     spirits_copy.remove(spirit1)
     spirit2 = random.choice(spirits_copy)
+
+    #Here is where you can hardcode another spirit, like "Christmassy"
+
+    spirits = [spirit1, spirit2]
 
     prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
     print(prompt)
@@ -58,7 +62,7 @@ def bear_of_the_day():
 
     bucket_name = os.environ['AWS_BUCKET_NAME']
     try:
-        s3.save_image_to_s3(image, bucket_name, image_path, prompt)
+        s3.save_image_to_s3(image, bucket_name, image_path, prompt, subject, scene, spirits)
     except Exception as e:
         print(f"Failed to save image to S3: {e}")
         sys.exit(1)

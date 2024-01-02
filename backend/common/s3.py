@@ -1,6 +1,6 @@
 import boto3
 
-def save_image_to_s3(image, bucket_name, s3_file_name, prompt):
+def save_image_to_s3(image, bucket_name, s3_file_name, prompt, subject, scene, spirits):
     """
     Saves an image to an S3 bucket.
 
@@ -15,7 +15,12 @@ def save_image_to_s3(image, bucket_name, s3_file_name, prompt):
     """
     s3 = boto3.client('s3')
 
-    metadata = {'prompt': prompt}
+    metadata = {
+            'prompt': prompt,
+            'subject': subject,
+            'scene': scene,
+            'spirits': ', '.join(spirits)
+        }
 
     s3.put_object(Bucket=bucket_name, Key=s3_file_name, Body=image, Metadata=metadata)
     print(f"Image saved to S3 bucket {bucket_name} with key {s3_file_name}")
