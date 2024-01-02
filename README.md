@@ -1,5 +1,5 @@
 # bear-of-the-day
-This is a program that will construct an image prompt by randomly combining items from a list of styles and a list of scenes, call the OpenAI DALL-E 3 API, and then send the image in an email to the chosen recipients.
+This is a program that will construct an image prompt by randomly combining items from a list of scenes and a list of spirits/moods, call the OpenAI DALL-E 3 API, and then send the image in an email to the chosen recipients.
 And the pictures are of bears, because bears are cute.
 
 ## Technical Details
@@ -30,4 +30,4 @@ Ensure that you have set up the necessary environment variables (`SENDER_EMAIL` 
 
 ## Usage
 
-Once deployed, the program will automatically run on the defined schedule. You can customize the list of styles, scenes, and email recipients by modifying the corresponding variables in the Lambda function code.
+Once deployed, the program will automatically run on the defined schedule. You can customize the list of scenes, spirits, and email recipients by modifying the corresponding variables in the Lambda function code.
