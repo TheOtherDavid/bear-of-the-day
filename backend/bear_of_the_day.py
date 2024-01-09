@@ -27,6 +27,8 @@ def bear_of_the_day():
     
     config.verify_environment()
 
+    debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'    
+
     # load the CSV files into arrays
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,6 +38,10 @@ def bear_of_the_day():
     
     # randomly select image elements
     subject = random.choice(subjects_file)
+    # add a 25% chance to add an S to the end of the subject, to make it plural
+    if random.random() < 0.25:
+        subject = subject + "s"
+
     scene = random.choice(scenes_file)
 
     spirits_copy = spirits_file[:]
@@ -67,10 +73,11 @@ def bear_of_the_day():
         print(f"Failed to save image to S3: {e}")
         sys.exit(1)
     # Publish a message to the SNS topic to trigger downstream functions
-    sns.publish(
-        TopicArn=os.environ['SNS_TOPIC_ARN'],
-        Message='BearOfTheDayFunction completed'
-    )
+    if debug_mode == False:
+        sns.publish(
+            TopicArn=os.environ['SNS_TOPIC_ARN'],
+            Message='BearOfTheDayFunction completed'
+        )
 
 def load_data_file(filename):
     with open(filename) as f:
