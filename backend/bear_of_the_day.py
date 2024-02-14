@@ -54,8 +54,6 @@ def bear_of_the_day():
     spirits = [spirit1, spirit2]
 
     prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
-    #Valentine's Day event
-    prompt = "A photo of a large grizzly bear in a forest, holding a large red heart that says 'I love Jen'"
     print(prompt)
     image_url = dalle.generate_image(prompt)
     if image_url is None:
