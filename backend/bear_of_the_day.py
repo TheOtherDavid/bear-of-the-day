@@ -53,7 +53,7 @@ def bear_of_the_day():
 
     spirits = [spirit1, spirit2]
 
-    prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
+    prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2 + ", Spooky"
     print(prompt)
     image_url = dalle.generate_image(prompt)
     if image_url is None:
