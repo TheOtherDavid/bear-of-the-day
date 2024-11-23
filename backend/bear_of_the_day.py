@@ -50,11 +50,16 @@ def bear_of_the_day():
     spirit2 = random.choice(spirits_copy)
 
     #Here is where you can hardcode another spirit, like "Christmassy"
-    spiritSpecial = "thanksgiving"
+    spirit_special = "thanksgiving"
 
-    spirits = [spirit1, spirit2]
+    if spirit_special == "":
+        spirits = [spirit1, spirit2]
+    else:
+        spirits = [spirit1, spirit2, spirit_special]
 
-    prompt = subject + " " + scene + ",  " + spirit1 + ", " + spirit2
+    spirits_string = ", ".join(spirits)
+
+    prompt = subject + " " + scene + ",  " + spirits_string
     print(prompt)
     image_url = dalle.generate_image(prompt)
     if image_url is None:
