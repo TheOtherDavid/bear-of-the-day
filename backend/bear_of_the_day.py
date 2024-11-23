@@ -50,6 +50,7 @@ def bear_of_the_day():
     spirit2 = random.choice(spirits_copy)
 
     #Here is where you can hardcode another spirit, like "Christmassy"
+    spiritSpecial = "thanksgiving"
 
     spirits = [spirit1, spirit2]
 
