@@ -7,10 +7,10 @@ def generate_image(prompt):
     
     print('Generating image...')
     response = client.images.generate(
-      model="dall-e-3", 
+      model="gpt-image-1", 
       prompt=prompt,
       size="1024x1024",
-      quality="standard",
+      quality="medium",
       n=1
     )
     print('Image generated!')
