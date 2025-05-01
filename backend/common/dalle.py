@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+from openai import OpenAI, APIError
 
 def generate_image(prompt):
   try:
@@ -18,7 +18,7 @@ def generate_image(prompt):
     image_url = response.data[0].url
 
     return image_url
-  except OpenAI.APIError as e:
+  except APIError as e:
     print(f"An error occurred while generating the image: {e}")
     return None
   except Exception as e:
