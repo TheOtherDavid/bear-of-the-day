@@ -4,12 +4,11 @@ from dotenv import load_dotenv
 import os
 import random
 import requests
+import base64
 import sys
 import common.config as config
 import common.dalle as dalle
 import common.s3 as s3
-
-sns = boto3.client('sns')
 
 def bear_of_the_day():
     """
@@ -28,6 +27,8 @@ def bear_of_the_day():
     config.verify_environment()
 
     debug_mode = os.environ.get('DEBUG_MODE', 'False') == 'True'    
+
+    sns = boto3.client('sns', region_name=os.environ['AWS_DEFAULT_REGION'])
 
     # load the CSV files into arrays
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -61,12 +62,12 @@ def bear_of_the_day():
 
     prompt = subject + " " + scene + ",  " + spirits_string
     print(prompt)
-    image_url = dalle.generate_image(prompt)
-    if image_url is None:
+    model = "gpt-image-1"
+    image_base64 = dalle.get_gpt_base64_image(model, prompt)
+    if image_base64 is None:
         print("Failed to generate image.")
         sys.exit(1)
-    print(image_url)
-    image = requests.get(image_url).content
+    image = decode_base64_image(image_base64)
 
     # save the image to a file with the timestamp
     image_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg'
@@ -74,7 +75,7 @@ def bear_of_the_day():
 
     bucket_name = os.environ['AWS_BUCKET_NAME']
     try:
-        s3.save_image_to_s3(image, bucket_name, image_path, prompt, subject, scene, spirits)
+        s3.save_image_to_s3(image, bucket_name, image_path, prompt, subject, scene, spirits, model)
     except Exception as e:
         print(f"Failed to save image to S3: {e}")
         sys.exit(1)
@@ -101,6 +102,10 @@ def lambda_handler(event, context):
     except Exception as e:
         print(f"Error: {e}")
         raise e
+
+def decode_base64_image(base64_image):
+    image = base64.b64decode(base64_image)
+    return image
 
 if __name__ == "__main__":
     load_dotenv()
