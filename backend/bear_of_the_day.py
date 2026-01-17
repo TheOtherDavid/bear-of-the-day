@@ -62,7 +62,7 @@ def bear_of_the_day():
 
     prompt = subject + " " + scene + ",  " + spirits_string
     print(prompt)
-    model = "gpt-image-1"
+    model = "gpt-image-1.5"
     image_base64 = dalle.get_gpt_base64_image(model, prompt)
     if image_base64 is None:
         print("Failed to generate image.")
