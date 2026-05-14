@@ -10,7 +10,7 @@ Resources:
       CodeUri: .
       Description: Generates a bear image and saves it to S3
       MemorySize: 128
-      Timeout: 60
+      Timeout: 300
       Environment:
         Variables:
           OPENAI_API_KEY: !Sub ${OpenAIKey}
