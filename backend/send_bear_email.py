@@ -24,9 +24,24 @@ def send_bear_image():
         prompt = metadata['prompt']
         recipients = os.environ['RECIPIENTS'].split(',')
 
+    # The stored image is a ~2MB PNG (great for the S3 gallery, heavy for email).
+    # Re-encode to JPEG for the attachment only; the S3 original is untouched.
+    image_data = compress_for_email(image_data)
+
     print("Sending email to " + str(recipients) + "...")
     send_email.send_image_email(recipients, image_data, image_path, prompt)
     print("Email sent!")
+
+def compress_for_email(image_bytes, quality=85):
+    """Re-encode image bytes (PNG or otherwise) to a JPEG suitable for email.
+
+    Converts to RGB (flattening any alpha, which JPEG can't store) and saves at
+    the given quality. At 1024x1024 this takes a ~2.4MB PNG down to ~350KB.
+    """
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+    out = io.BytesIO()
+    img.save(out, format="JPEG", quality=quality, optimize=True)
+    return out.getvalue()
 
 def generate_blank_image():
     # generate a blank image
