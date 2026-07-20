@@ -2,18 +2,18 @@
   <div id="content">
     <h1>Bear Of The Day!</h1>
     <GetLatestBear />
-    <LoadMoreBears />
+    <BrowseBears />
   </div>
 </template>
 
 <script>
 import GetLatestBear from './components/GetLatestBear.vue'
-import LoadMoreBears from './components/LoadMoreBears.vue'
+import BrowseBears from './components/BrowseBears.vue'
 export default {
   name: 'App',
   components: {
     GetLatestBear,
-    LoadMoreBears
+    BrowseBears
   }
 }
 </script>
