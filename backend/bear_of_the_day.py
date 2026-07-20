@@ -9,6 +9,7 @@ import sys
 import common.config as config
 import common.dalle as dalle
 import common.s3 as s3
+import common.manifest as manifest
 
 def bear_of_the_day():
     """
@@ -79,6 +80,22 @@ def bear_of_the_day():
     except Exception as e:
         print(f"Failed to save image to S3: {e}")
         sys.exit(1)
+
+    # Record the new image in the manifest so the gallery can filter on it.
+    # A manifest hiccup must never block image delivery; rebuild_manifest self-heals.
+    try:
+        entry = manifest.entry_from_metadata(image_path, {
+            'subject': subject,
+            'scene': scene,
+            'spirits': ', '.join(spirits),
+            'model': model,
+            'prompt': prompt,
+        })
+        manifest.append_entry(bucket_name, entry)
+        print("Manifest updated.")
+    except Exception as e:
+        print(f"Warning: failed to update manifest (will self-heal on rebuild): {e}")
+
     # Publish a message to the SNS topic to trigger downstream functions
     if debug_mode == False:
         sns.publish(

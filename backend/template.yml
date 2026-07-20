@@ -113,6 +113,60 @@ Resources:
           Properties:
             Path: /morebears
             Method: post
+  GetManifestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: get_manifest.lambda_handler
+      Runtime: python3.12
+      CodeUri: .
+      Description: Returns the image metadata manifest for the frontend gallery.
+      MemorySize: 256
+      Timeout: 30
+      Environment:
+        Variables:
+          AWS_BUCKET_NAME: !Sub ${BucketName}
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - S3ReadPolicy:
+            BucketName: !Sub ${BucketName}
+  BearUrlsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: bear_urls.lambda_handler
+      Runtime: python3.12
+      CodeUri: .
+      Description: Mints presigned URLs for a page of filtered image keys.
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          AWS_BUCKET_NAME: !Sub ${BucketName}
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - S3ReadPolicy:
+            BucketName: !Sub ${BucketName}
+  RebuildManifestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: rebuild_manifest.lambda_handler
+      Runtime: python3.12
+      CodeUri: .
+      Description: Rebuilds manifest.json by scanning the bucket (backfill/repair). Manual invoke.
+      MemorySize: 256
+      Timeout: 300
+      Environment:
+        Variables:
+          AWS_BUCKET_NAME: !Sub ${BucketName}
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - S3ReadPolicy:
+            BucketName: !Sub ${BucketName}
+        - Statement:
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource:
+              - !Sub arn:aws:s3:::${BucketName}/*
   BearApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -192,6 +246,76 @@ Resources:
                     Access-Control-Allow-Headers:
                       type: 'string'
                       default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+          /manifest:
+            get:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetManifestFunction.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: aws_proxy
+                credentials: !GetAtt ApiGatewayExecutionRole.Arn
+            options:
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                passthroughBehavior: when_no_match
+                type: mock
+              responses:
+                '200':
+                  description: '200 response'
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: 'string'
+                      default: '*'
+                    Access-Control-Allow-Methods:
+                      type: 'string'
+                      default: 'GET,OPTIONS'
+                    Access-Control-Allow-Headers:
+                      type: 'string'
+                      default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+          /bearurls:
+            post:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BearUrlsFunction.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: aws_proxy
+                credentials: !GetAtt ApiGatewayExecutionRole.Arn
+            options:
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                passthroughBehavior: when_no_match
+                type: mock
+              responses:
+                '200':
+                  description: '200 response'
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: 'string'
+                      default: '*'
+                    Access-Control-Allow-Methods:
+                      type: 'string'
+                      default: 'POST,OPTIONS'
+                    Access-Control-Allow-Headers:
+                      type: 'string'
+                      default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
   ApiGatewayExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -212,6 +336,8 @@ Resources:
                 Resource: 
                   - !GetAtt GetLatestBearFunction.Arn
                   - !GetAtt GetBearsBatchFunction.Arn
+                  - !GetAtt GetManifestFunction.Arn
+                  - !GetAtt BearUrlsFunction.Arn
   BearOfTheDayTopic:
     Type: AWS::SNS::Topic
 Parameters:
