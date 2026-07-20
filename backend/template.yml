@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: bear_of_the_day.lambda_handler
-      Runtime: python3.8
+      Runtime: python3.12
       CodeUri: .
       Description: Generates a bear image and saves it to S3
       MemorySize: 128
@@ -43,7 +43,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: send_bear_email.lambda_handler
-      Runtime: python3.8
+      Runtime: python3.12
       CodeUri: .
       Description: Sends an email with a bear picture.
       MemorySize: 128
@@ -73,7 +73,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: get_latest_bear.lambda_handler
-      Runtime: python3.8
+      Runtime: python3.12
       CodeUri: .
       Description: Returns the latest bear image from the S3 bucket.
       MemorySize: 128
@@ -95,7 +95,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: get_bears_batch.lambda_handler
-      Runtime: python3.8
+      Runtime: python3.12
       CodeUri: .
       Description: Returns more bears from the S3 bucket, in reverse chronological order.
       MemorySize: 128
