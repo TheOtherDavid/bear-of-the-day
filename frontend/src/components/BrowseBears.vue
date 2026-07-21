@@ -66,6 +66,13 @@ const API_BASE = 'https://ly8ms91c44.execute-api.us-east-2.amazonaws.com/Prod'
 const MANIFEST_URL = process.env.VUE_APP_MANIFEST_URL || `${API_BASE}/manifest`
 const BEARURLS_URL = process.env.VUE_APP_BEARURLS_URL || `${API_BASE}/bearurls`
 
+// The generator sometimes pluralizes a subject by appending "s" (e.g. "Grizzly
+// Bears"). No base subject ends in "s", so stripping a trailing "s" recovers the
+// singular, letting us group "Grizzly Bear" and "Grizzly Bears" as one facet.
+function normalizeSubject(s) {
+    return s && s.endsWith('s') ? s.slice(0, -1) : s
+}
+
 export default {
     name: 'BrowseBears',
     components: { BearImage },
@@ -92,7 +99,7 @@ export default {
                     .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value))
             }
             return {
-                subjects: tally(this.images.map(e => e.subject)),
+                subjects: tally(this.images.map(e => normalizeSubject(e.subject))),
                 scenes: tally(this.images.map(e => e.scene)),
                 spirits: tally(this.images.flatMap(e => e.spirits || [])),
             }
@@ -101,7 +108,7 @@ export default {
             const { subject, scene, spirit, prompt } = this.filters
             const needle = prompt.trim().toLowerCase()
             return this.images.filter(e => {
-                if (subject && e.subject !== subject) return false
+                if (subject && normalizeSubject(e.subject) !== subject) return false
                 if (scene && e.scene !== scene) return false
                 if (spirit && !(e.spirits || []).includes(spirit)) return false
                 if (needle && !(e.prompt || '').toLowerCase().includes(needle)) return false
