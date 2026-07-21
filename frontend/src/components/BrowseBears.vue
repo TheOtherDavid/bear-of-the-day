@@ -89,7 +89,7 @@ export default {
                 }
                 return Object.entries(counts)
                     .map(([value, count]) => ({ value, count }))
-                    .sort((a, b) => a.value.localeCompare(b.value))
+                    .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value))
             }
             return {
                 subjects: tally(this.images.map(e => e.subject)),
