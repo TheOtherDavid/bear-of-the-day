@@ -63,6 +63,9 @@ def get_latest_file(bucketName):
 
     latest_object = None 
     for obj in response['Contents']:
+        # Only consider image objects; skip manifest.json and any other non-images.
+        if not obj['Key'].lower().endswith('.jpg'):
+            continue
         obj_time = obj['LastModified']
         if latest_object is None or obj_time > latest_object['LastModified']:
             latest_object = obj

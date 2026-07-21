@@ -13,8 +13,10 @@ def get_bears_batch(batch_size, offset):
     bucketName = os.environ['AWS_BUCKET_NAME']
     # Get list of objects in bucket
     response = s3.list_objects_v2(Bucket=bucketName)
-    # Sort objects by LastModified and get the latest 'batch_size' objects
-    sorted_objects = sorted(response['Contents'], key=lambda obj: obj['LastModified'], reverse=True)
+    # Sort image objects by LastModified and get the latest 'batch_size' objects
+    # (skip manifest.json and any other non-image objects).
+    images = [obj for obj in response['Contents'] if obj['Key'].lower().endswith('.jpg')]
+    sorted_objects = sorted(images, key=lambda obj: obj['LastModified'], reverse=True)
     batch_objects = sorted_objects[offset:offset + batch_size]
     # Generate presigned URLs for the objects
     objects = []
