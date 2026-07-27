@@ -143,7 +143,9 @@ export default {
                 const res = await fetch(MANIFEST_URL)
                 if (!res.ok) throw new Error(`HTTP ${res.status}`)
                 const data = await res.json()
-                this.images = data.images || []
+                // The latest bear is shown separately above the history.
+                // The manifest is newest-first, so omit its first entry here.
+                this.images = (data.images || []).slice(1)
             } catch (e) {
                 this.error = e.message
             } finally {

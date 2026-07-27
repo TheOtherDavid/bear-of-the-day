@@ -1,6 +1,6 @@
 <template>
     <div class="image-container">
-        <img v-if="imageUrl" :src="imageUrl" class="bear-image">
+        <img v-if="imageUrl" :src="imageUrl" class="bear-image" loading="lazy" decoding="async">
         <p v-if="metadata">{{ metadata.prompt }}</p>
     </div>
 </template>
