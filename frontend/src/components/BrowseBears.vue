@@ -37,7 +37,7 @@
 
         <p v-if="loading" class="status">Loading gallery…</p>
         <p v-else-if="error" class="status">Could not load the gallery: {{ error }}</p>
-        <p v-else class="status">{{ filtered.length }} of {{ images.length }} bears</p>
+        <p v-else class="status"><span v-if="hasFilters">{{ filtered.length }} matching · </span>{{ totalCount }} total bears</p>
 
         <div class="gallery">
             <BearImage
@@ -79,6 +79,7 @@ export default {
     data() {
         return {
             images: [],
+            totalCount: 0,
             urls: {},
             loading: true,
             error: null,
@@ -87,6 +88,9 @@ export default {
         }
     },
     computed: {
+        hasFilters() {
+            return Object.values(this.filters).some(value => value.trim() !== '')
+        },
         facets() {
             const tally = (values) => {
                 const counts = {}
@@ -143,9 +147,12 @@ export default {
                 const res = await fetch(MANIFEST_URL)
                 if (!res.ok) throw new Error(`HTTP ${res.status}`)
                 const data = await res.json()
+                // Keep the full manifest count so the status includes today's bear.
+                const allImages = data.images || []
+                this.totalCount = allImages.length
                 // The latest bear is shown separately above the history.
                 // The manifest is newest-first, so omit its first entry here.
-                this.images = (data.images || []).slice(1)
+                this.images = allImages.slice(1)
             } catch (e) {
                 this.error = e.message
             } finally {

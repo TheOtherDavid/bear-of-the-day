@@ -1,6 +1,7 @@
 import boto3
 import os
 import json
+import common.manifest as manifest
 import common.s3 as s3
 from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
@@ -13,6 +14,7 @@ def get_latest_bear():
     
     obj, metadata, image_path = s3.get_latest_file(bucketName)
     print("Object retrieved from S3")
+    latest_entry = manifest.entry_from_metadata(image_path, metadata, obj.get('LastModified'))
 
     # Generate a presigned URL for the object
     try:
@@ -30,6 +32,8 @@ def get_latest_bear():
         'statusCode': 200,
         'body': json.dumps({
             'url': response,
+            'key': image_path,
+            'timestamp': latest_entry['timestamp'],
             'metadata': metadata
         }),
         'headers': {

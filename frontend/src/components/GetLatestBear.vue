@@ -25,7 +25,11 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.imageUrl = data.url;
-                this.metadata = data.metadata;
+                this.metadata = {
+                    ...(data.metadata || {}),
+                    key: data.key,
+                    timestamp: data.timestamp,
+                };
             });
     }
 }
