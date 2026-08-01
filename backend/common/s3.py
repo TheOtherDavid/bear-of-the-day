@@ -59,16 +59,17 @@ def get_object_with_metadata(bucket_name, key):
 
 def get_latest_file(bucketName):
     s3 = boto3.client('s3')
-    response = s3.list_objects_v2(Bucket=bucketName)
+    paginator = s3.get_paginator('list_objects_v2')
 
-    latest_object = None 
-    for obj in response['Contents']:
-        # Only consider image objects; skip manifest.json and any other non-images.
-        if not obj['Key'].lower().endswith('.jpg'):
-            continue
-        obj_time = obj['LastModified']
-        if latest_object is None or obj_time > latest_object['LastModified']:
-            latest_object = obj
+    latest_object = None
+    for page in paginator.paginate(Bucket=bucketName):
+        for obj in page.get('Contents', []):
+            # Only consider image objects; skip manifest.json and any other non-images.
+            if not obj['Key'].lower().endswith('.jpg'):
+                continue
+            obj_time = obj['LastModified']
+            if latest_object is None or obj_time > latest_object['LastModified']:
+                latest_object = obj
 
     image_path = latest_object['Key']
 
