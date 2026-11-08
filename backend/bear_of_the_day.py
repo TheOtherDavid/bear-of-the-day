@@ -142,12 +142,12 @@ def load_seasonal_content(filename):
             raise ValueError(f"Month {month_key} must have at least one scene and no blank entries.")
         if (
             not isinstance(spirits, list)
-            or len(spirits) != 8
+            or len(spirits) < 2
             or any(not isinstance(spirit, str) or not spirit.isalpha() for spirit in spirits)
-            or len({spirit.casefold() for spirit in spirits}) != 8
+            or len({spirit.casefold() for spirit in spirits}) != len(spirits)
         ):
             raise ValueError(
-                f"Month {month_key} must have exactly 8 distinct single-word seasonal spirits."
+                f"Month {month_key} must have at least 2 distinct single-word seasonal spirits."
             )
 
     return content

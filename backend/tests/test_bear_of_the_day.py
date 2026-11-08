@@ -117,12 +117,12 @@ class SeasonalContentTests(unittest.TestCase):
         october = self.content["months"]["10"]
         spirits = october["spirits"]
         invalid_lists = (
-            ("wrong count", spirits[:-1]),
+            ("too few", spirits[:1]),
             ("multiple words", [*spirits[:-1], "Deep Dark"]),
             ("duplicate", [*spirits[:-1], spirits[0].lower()]),
         )
         for reason, values in invalid_lists:
             with self.subTest(reason=reason):
                 october["spirits"] = values
-                with self.assertRaisesRegex(ValueError, "Month 10 must have exactly 8 distinct"):
+                with self.assertRaisesRegex(ValueError, "Month 10 must have at least 2 distinct"):
                     self.load_content()

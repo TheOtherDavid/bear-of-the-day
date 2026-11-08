@@ -49,8 +49,8 @@ with `npm run serve` from the `frontend/` directory.
 
 The base image vocabulary is in CSV files in `backend/`: `subjects.csv`, `scenes.csv`,
 `spirits.csv`, and `styles.csv`. Monthly seasonal scenes and
-spirits are in `backend/seasonal_content.json`. Each month needs a scene list with
-at least one entry and 8 distinct single-word spirits. The generator uses the UTC
+spirits are in `backend/seasonal_content.json`. Each month needs a nonempty scene list
+and at least two distinct single-word spirits. The generator uses the UTC
 month, chooses a general or seasonal scene with equal probability, and pairs one
 general spirit with one seasonal spirit. Removed entries stay searchable because
 the manifest reflects the images already in the bucket.
