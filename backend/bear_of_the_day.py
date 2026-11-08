@@ -1,5 +1,6 @@
 import boto3
 import datetime
+import json
 from dotenv import load_dotenv
 import os
 import random
@@ -18,7 +19,8 @@ def bear_of_the_day():
 
     If the DEBUG_MODE environment variable is set to True, the function will generate a blank image instead.
 
-    The function reads the style and scene data from 'subjects.csv', 'spirits.csv', and 'scenes.csv' files.
+    The function reads base prompt vocabulary from CSV files, plus monthly seasonal
+    scenes and spirits from 'seasonal_content.json'.
 
     The AWS_BUCKET_NAME and RECIPIENTS environment variables must be set. RECIPIENTS is a comma-separated list of email addresses.
 
@@ -31,37 +33,43 @@ def bear_of_the_day():
 
     sns = boto3.client('sns', region_name=os.environ['AWS_DEFAULT_REGION'])
 
-    # load the CSV files into arrays
+    # load base prompt vocabulary and month-specific seasonal content
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     subjects_file = load_data_file(os.path.join(script_dir, 'subjects.csv'))
     scenes_file = load_data_file(os.path.join(script_dir, 'scenes.csv'))
     spirits_file = load_data_file(os.path.join(script_dir, 'spirits.csv'))
-    
+    seasonal_content = load_seasonal_content(
+        os.path.join(script_dir, 'seasonal_content.json')
+    )
+    # EventBridge runs at 13:00 UTC, so this month also matches the German local date.
+    month_key = datetime.datetime.now(datetime.timezone.utc).strftime('%m')
+    month_content = seasonal_content['months'][month_key]
+
     # randomly select image elements
     subject = random.choice(subjects_file)
     # add a 25% chance to add an S to the end of the subject, to make it plural
     if random.random() < 0.25:
         subject = subject + "s"
 
-    scene = random.choice(scenes_file)
-
-    spirits_copy = spirits_file[:]
-    spirit1 = random.choice(spirits_file)
-    spirits_copy.remove(spirit1)
-    spirit2 = random.choice(spirits_copy)
-
-    #Here is where you can hardcode another spirit, like "Christmassy"
-    spirit_special = ""
-
-    if spirit_special == "":
-        spirits = [spirit1, spirit2]
+    # Choose a general or seasonal scene with equal probability.
+    if random.random() < 0.5:
+        scene = random.choice(month_content['scenes'])
     else:
-        spirits = [spirit1, spirit2, spirit_special]
+        scene = random.choice(scenes_file)
+
+    # Every prompt gets one general spirit and one seasonal spirit.
+    normal_spirit = random.choice(spirits_file)
+    seasonal_spirit_options = [
+        spirit for spirit in month_content['spirits']
+        if spirit.casefold() != normal_spirit.casefold()
+    ]
+    seasonal_spirit = random.choice(seasonal_spirit_options)
+    spirits = [normal_spirit, seasonal_spirit]
 
     spirits_string = ", ".join(spirits)
 
-    prompt = subject + " " + scene + ",  " + spirits_string
+    prompt = f"{subject} {scene}, {spirits_string}"
     print(prompt)
     model = "gpt-image-2"
     image_base64 = dalle.get_gpt_base64_image(model, prompt)
@@ -87,7 +95,7 @@ def bear_of_the_day():
         entry = manifest.entry_from_metadata(image_path, {
             'subject': subject,
             'scene': scene,
-            'spirits': ', '.join(spirits),
+            'spirits': spirits_string,
             'model': model,
             'prompt': prompt,
         })
@@ -104,9 +112,46 @@ def bear_of_the_day():
         )
 
 def load_data_file(filename):
-    with open(filename) as f:
-        data = f.read().splitlines() 
-    return data
+    with open(filename, encoding='utf-8') as f:
+        return f.read().splitlines()
+
+
+def load_seasonal_content(filename):
+    with open(filename, encoding='utf-8') as f:
+        content = json.load(f)
+
+    if not isinstance(content, dict) or not isinstance(content.get('months'), dict):
+        raise ValueError("Seasonal content must contain a 'months' object.")
+
+    months = content['months']
+    expected_months = {f'{month:02d}' for month in range(1, 13)}
+    if set(months) != expected_months:
+        raise ValueError("Seasonal content must define month keys '01' through '12'.")
+
+    for month_key, month_content in months.items():
+        if not isinstance(month_content, dict):
+            raise ValueError(f"Seasonal content for month {month_key} must be an object.")
+
+        scenes = month_content.get('scenes')
+        spirits = month_content.get('spirits')
+        if (
+            not isinstance(scenes, list)
+            or not scenes
+            or any(not isinstance(scene, str) or not scene.strip() for scene in scenes)
+        ):
+            raise ValueError(f"Month {month_key} must have at least one scene and no blank entries.")
+        if (
+            not isinstance(spirits, list)
+            or len(spirits) != 8
+            or any(not isinstance(spirit, str) or not spirit.isalpha() for spirit in spirits)
+            or len({spirit.casefold() for spirit in spirits}) != 8
+        ):
+            raise ValueError(
+                f"Month {month_key} must have exactly 8 distinct single-word seasonal spirits."
+            )
+
+    return content
+
 
 def download_image(url, file_path):
     response = requests.get(url)

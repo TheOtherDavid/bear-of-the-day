@@ -1,3 +1,5 @@
+from base64 import b64decode, b64encode
+
 import boto3
 
 def save_image_to_s3(image, bucket_name, s3_file_name, prompt, subject, scene, spirits, model):
@@ -23,8 +25,29 @@ def save_image_to_s3(image, bucket_name, s3_file_name, prompt, subject, scene, s
             'model': model
         }
 
+    # Botocore requires ASCII S3 metadata headers. Record which fields need decoding.
+    encoded_fields = []
+    for field, value in metadata.items():
+        if not value.isascii() or not value.isprintable():
+            metadata[field] = b64encode(value.encode('utf-8')).decode('ascii')
+            encoded_fields.append(field)
+    if encoded_fields:
+        metadata['bear-utf8-fields'] = ','.join(encoded_fields)
+
     s3.put_object(Bucket=bucket_name, Key=s3_file_name, Body=image, Metadata=metadata)
     print(f"Image saved to S3 bucket {bucket_name} with key {s3_file_name}")
+
+
+def decode_image_metadata(metadata):
+    """Restore text encoded by save_image_to_s3."""
+    if 'bear-utf8-fields' not in metadata:
+        return metadata
+
+    decoded = metadata.copy()
+    for field in decoded.pop('bear-utf8-fields').split(','):
+        decoded[field] = b64decode(decoded[field]).decode('utf-8')
+    return decoded
+
 
 def list_items_v2(bucket_name):
     """
@@ -74,6 +97,6 @@ def get_latest_file(bucketName):
     image_path = latest_object['Key']
 
     obj = s3.get_object(Bucket=bucketName, Key=image_path)
-    metadata = obj['Metadata']
+    metadata = decode_image_metadata(obj['Metadata'])
 
     return obj, metadata, image_path

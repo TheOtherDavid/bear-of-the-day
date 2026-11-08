@@ -5,6 +5,7 @@ import json
 import logging
 from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
+from common.s3 import decode_image_metadata
 
 s3 = boto3.client('s3')
 
@@ -23,7 +24,7 @@ def get_bears_batch(batch_size, offset):
     for obj in batch_objects:
         try:
             response = s3.get_object(Bucket=bucketName, Key=obj['Key'])
-            metadata = response['Metadata']
+            metadata = decode_image_metadata(response['Metadata'])
             presigned_url = s3.generate_presigned_url('get_object',
                                                   Params={'Bucket': bucketName,
                                                           'Key': obj['Key']},

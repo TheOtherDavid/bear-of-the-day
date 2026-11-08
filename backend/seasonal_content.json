@@ -1,0 +1,303 @@
+{
+  "version": 1,
+  "months": {
+    "01": {
+      "name": "January",
+      "scenes": [
+        "Taking down Christmas lights",
+        "Packing away tree ornaments",
+        "Carrying the tree to a neighborhood collection point",
+        "Listening to Sternsingers sing at the door",
+        "Sharing a Three Kings cake",
+        "Writing a list of small adventures for the new year",
+        "Watching a Lunar New Year dragon dance",
+        "Hanging red lanterns for Lunar New Year",
+        "Making seed cakes for winter birds",
+        "Going ice skating"
+      ],
+      "spirits": [
+        "Snowy",
+        "Frosty",
+        "Wintry",
+        "Hushed",
+        "Evergreen",
+        "Resolute",
+        "Fireside",
+        "Lucky"
+      ]
+    },
+    "02": {
+      "name": "February",
+      "scenes": [
+        "Exchanging handmade valentines",
+        "Baking heart-shaped cookies",
+        "Watching a groundhog look for its shadow",
+        "Dressing up for a Fasching or Karneval parade",
+        "Tossing confetti during a Rose Monday procession",
+        "Flipping pancakes for Shrove Tuesday",
+        "Watching a Lunar New Year dragon dance",
+        "Tapping maple trees",
+        "Boiling maple sap into syrup",
+        "Taking a winter sauna"
+      ],
+      "spirits": [
+        "Lovestruck",
+        "Rosy",
+        "Playful",
+        "Masked",
+        "Thawing",
+        "Snowdrop",
+        "Maple",
+        "Affectionate"
+      ]
+    },
+    "03": {
+      "name": "March",
+      "scenes": [
+        "Marching in a St. Patrick’s Day parade",
+        "Joining a late-season Fasching parade",
+        "Setting a haft-sin table for Nowruz",
+        "Painting Easter eggs",
+        "Hunting for Easter eggs",
+        "Tapping sugar maples",
+        "Starting vegetable seedlings indoors",
+        "Planting peas",
+        "Cleaning garden tools for spring",
+        "Building a nesting box"
+      ],
+      "spirits": [
+        "Lucky",
+        "Green",
+        "Vernal",
+        "Muddy",
+        "Windy",
+        "Budding",
+        "Rainy",
+        "Restless"
+      ]
+    },
+    "04": {
+      "name": "April",
+      "scenes": [
+        "Hunting for Easter eggs",
+        "Decorating an Osterbrunnen",
+        "Baking Easter bread",
+        "Joining a Walpurgisnacht bonfire",
+        "Cleaning up a garden for Earth Day",
+        "Harvesting white asparagus",
+        "Making dandelion syrup",
+        "Planting herbs on a balcony",
+        "Visiting a spring farmers’ market",
+        "Foraging for morels"
+      ],
+      "spirits": [
+        "Rainy",
+        "Blooming",
+        "Pastel",
+        "Eggy",
+        "Witchy",
+        "Fertile",
+        "Floral",
+        "Sprightly"
+      ]
+    },
+    "05": {
+      "name": "May",
+      "scenes": [
+        "Dancing around a village Maypole",
+        "Helping raise a Maibaum",
+        "Making breakfast for Mother’s Day",
+        "Sharing a Memorial Day picnic",
+        "Taking a Pentecost outing",
+        "Picking strawberries",
+        "Harvesting white asparagus",
+        "Making elderflower cordial",
+        "Cycling to a beer garden",
+        "Visiting a spring festival"
+      ],
+      "spirits": [
+        "Floral",
+        "Blooming",
+        "Fragrant",
+        "Lilac",
+        "Buzzy",
+        "Lively",
+        "Strawberry",
+        "Festive"
+      ]
+    },
+    "06": {
+      "name": "June",
+      "scenes": [
+        "Marching in a Pride parade",
+        "Making a flower wreath for Midsummer",
+        "Dancing around a Midsummer bonfire",
+        "Watching St. John’s fires from a hill",
+        "Sharing the last asparagus feast of Spargelzeit",
+        "Having a picnic on the longest day",
+        "Picking strawberries",
+        "Camping at a summer festival",
+        "Watching an open-air concert"
+      ],
+      "spirits": [
+        "Midsummer",
+        "Proud",
+        "Joyful",
+        "Sunny",
+        "Floral",
+        "Languid",
+        "Juicy",
+        "Luminous"
+      ]
+    },
+    "07": {
+      "name": "July",
+      "scenes": [
+        "Joining a Fourth of July parade",
+        "Watching a neighborhood fireworks display",
+        "Grilling vegetables at a backyard gathering",
+        "Entering a pie in a county fair",
+        "Watching a film at an outdoor cinema",
+        "Joining a village Schützenfest",
+        "Sharing a Bastille Day picnic",
+        "Camping beside a lake",
+        "Picking summer berries",
+        "Marching with a village brass band"
+      ],
+      "spirits": [
+        "Patriotic",
+        "Festive",
+        "Boisterous",
+        "Sunbaked",
+        "Berried",
+        "Sparkling",
+        "Jubilant",
+        "Relaxed"
+      ]
+    },
+    "08": {
+      "name": "August",
+      "scenes": [
+        "Visiting a county or state fair",
+        "Entering a pie-baking contest",
+        "Shopping for school supplies",
+        "Packing for a late-summer holiday",
+        "Visiting a German wine festival",
+        "Gathering herbs for a Mariä Himmelfahrt bouquet",
+        "Joining a harvest festival",
+        "Canning tomatoes",
+        "Watching the Perseid meteor shower",
+        "Swimming at a lake"
+      ],
+      "spirits": [
+        "Ripening",
+        "Bountiful",
+        "Sunbaked",
+        "Languid",
+        "Scholastic",
+        "Festive",
+        "Dreamy",
+        "Perseid"
+      ]
+    },
+    "09": {
+      "name": "September",
+      "scenes": [
+        "Watching an Oktoberfest parade",
+        "Sharing pretzels at the Wiesn",
+        "Celebrating Labor Day with a picnic",
+        "Picking apples",
+        "Pressing apples into juice",
+        "Harvesting grapes",
+        "Visiting a harvest festival",
+        "Packing a backpack for the school year",
+        "Attending a village wine festival",
+        "Hiking to see the first autumn leaves"
+      ],
+      "spirits": [
+        "Autumnal",
+        "Harvest",
+        "Wiesn",
+        "Bavarian",
+        "Apple",
+        "Grape",
+        "Russet",
+        "Scholastic"
+      ]
+    },
+    "10": {
+      "name": "October",
+      "scenes": [
+        "Carving pumpkins",
+        "Dressing up for Halloween",
+        "Handing out candy to trick-or-treaters",
+        "Sharing an Erntedank harvest meal",
+        "Celebrating German Unity Day at a town picnic",
+        "Lighting lamps for Diwali",
+        "Visiting the closing days of Oktoberfest",
+        "Making apple butter",
+        "Gathering mushrooms",
+        "Choosing pumpkins at a farm stand"
+      ],
+      "spirits": [
+        "Spooky",
+        "Ghoulish",
+        "Witchy",
+        "Haunted",
+        "Creepy",
+        "Macabre",
+        "Harvest",
+        "Pumpkin"
+      ]
+    },
+    "11": {
+      "name": "November",
+      "scenes": [
+        "Leading a St. Martin’s lantern procession",
+        "Sharing a goose feast",
+        "Watching a Thanksgiving parade",
+        "Passing dishes around a Thanksgiving table",
+        "Packing leftovers for a neighbor",
+        "Lighting Hanukkah candles",
+        "Making an Advent wreath",
+        "Preparing food for winter birds",
+        "Gathering the last apples",
+        "Leaving flowers at a Veterans Day memorial"
+      ],
+      "spirits": [
+        "Thankful",
+        "Lanternlit",
+        "Goosey",
+        "Feasting",
+        "Cranberry",
+        "Smoky",
+        "Candlelit",
+        "Huddled"
+      ]
+    },
+    "12": {
+      "name": "December",
+      "scenes": [
+        "Opening an Advent calendar",
+        "Visiting a Christmas market",
+        "Hanging up Christmas lights",
+        "Watching a Krampus parade",
+        "Lighting a Hanukkah menorah",
+        "Singing carols",
+        "Decorating a Christmas tree",
+        "Leaving a snack out for Santa",
+        "Making paper streamers for New Year’s Eve"
+      ],
+      "spirits": [
+        "Christmassy",
+        "Advent",
+        "Nikolaus",
+        "Krampus",
+        "Hanukkah",
+        "Yule",
+        "Gingerbread",
+        "Merry"
+      ]
+    }
+  }
+}

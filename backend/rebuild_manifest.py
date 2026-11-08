@@ -8,6 +8,7 @@ import os
 import boto3
 from dotenv import load_dotenv
 import common.manifest as manifest
+from common.s3 import decode_image_metadata
 
 s3 = boto3.client("s3")
 
@@ -22,7 +23,8 @@ def rebuild_manifest():
             if key == manifest.MANIFEST_KEY or not key.lower().endswith(".jpg"):
                 continue
             head = s3.head_object(Bucket=bucket, Key=key)
-            entries.append(manifest.entry_from_metadata(key, head.get("Metadata", {}), obj["LastModified"]))
+            metadata = decode_image_metadata(head.get("Metadata", {}))
+            entries.append(manifest.entry_from_metadata(key, metadata, obj["LastModified"]))
 
     entries.sort(key=lambda e: e["timestamp"] or "", reverse=True)
     doc = {"version": 1, "images": entries}

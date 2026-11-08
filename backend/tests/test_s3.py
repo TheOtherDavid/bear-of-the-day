@@ -1,5 +1,6 @@
 import sys
 import unittest
+from base64 import b64encode
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import Mock, patch
@@ -57,6 +58,27 @@ class GetLatestFileTests(unittest.TestCase):
             Bucket="bear-of-the-day",
             Key=latest_key,
         )
+
+    @patch("common.s3.boto3.client")
+    def test_decodes_latest_images_metadata(self, mock_boto_client):
+        client = mock_boto_client.return_value
+        key = "20261101-130000.jpg"
+        scene = "Leading a St. Martin\u2019s lantern procession"
+        client.get_paginator.return_value.paginate.return_value = [{
+            "Contents": [{"Key": key, "LastModified": datetime(2026, 11, 1, tzinfo=timezone.utc)}]
+        }]
+        client.get_object.return_value = {
+            "Metadata": {
+                "scene": b64encode(scene.encode("utf-8")).decode("ascii"),
+                "subject": "Brown Bear",
+                "bear-utf8-fields": "scene",
+            }
+        }
+
+        _, metadata, image_key = s3.get_latest_file("bear-of-the-day")
+
+        self.assertEqual(image_key, key)
+        self.assertEqual(metadata, {"scene": scene, "subject": "Brown Bear"})
 
 
 if __name__ == "__main__":

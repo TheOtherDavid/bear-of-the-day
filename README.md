@@ -4,9 +4,10 @@ A little serverless app that generates an AI image of a bear every day, emails i
 to a list of recipients, and keeps a browsable gallery of every bear ever made.
 Because bears are cute.
 
-It builds a prompt by randomly combining a subject, a scene, and two "spirits"
-(moods) drawn from CSV word lists, calls OpenAI's image API, stores the result in
-S3, and emails it out.
+It builds a prompt by combining a random subject, a scene selected from either
+the general list or the current month's seasonal list, and two "spirits": one
+from the general list and one from the current month's seasonal list. It calls
+OpenAI's image API, stores the result in S3, and emails it out.
 
 ## How it works
 
@@ -14,8 +15,9 @@ The backend is an AWS SAM (CloudFormation) stack of Python 3.12 Lambda functions
 in `us-east-2`, wired together like this:
 
 1. **Generator** (`bear_of_the_day.py`) — runs on a daily schedule (EventBridge,
-   13:00 UTC). It composes a prompt from `subjects.csv`, `scenes.csv`, and
-   `spirits.csv`, calls the OpenAI image API (currently the `gpt-image-2` model),
+   13:00 UTC). It composes a prompt from `subjects.csv`, `scenes.csv`,
+   `spirits.csv`, and `seasonal_content.json`, calls the OpenAI image API
+   (currently the `gpt-image-2` model),
    saves the PNG to S3 with the prompt/subject/scene/spirits/model as object
    metadata, records the image in the manifest (see below), and publishes an SNS
    message.
@@ -45,10 +47,13 @@ with `npm run serve` from the `frontend/` directory.
 
 ## Data / customization
 
-The image vocabulary is just CSV files in `backend/`: `subjects.csv`,
-`scenes.csv`, `spirits.csv`, `styles.csv`. Edit those to change what the bears
-look like. Removed entries stay searchable in the gallery because the manifest is
-built from what's actually in the bucket, not from the current CSVs.
+The base image vocabulary is in CSV files in `backend/`: `subjects.csv`, `scenes.csv`,
+`spirits.csv`, and `styles.csv`. Monthly seasonal scenes and
+spirits are in `backend/seasonal_content.json`. Each month needs a scene list with
+at least one entry and 8 distinct single-word spirits. The generator uses the UTC
+month, chooses a general or seasonal scene with equal probability, and pairs one
+general spirit with one seasonal spirit. Removed entries stay searchable because
+the manifest reflects the images already in the bucket.
 
 ## Deployment
 
